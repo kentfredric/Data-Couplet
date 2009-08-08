@@ -81,6 +81,10 @@ has _ik => (
   }
 );
 
+# Maps Anything to a usable Key.
+# Essentially, stringify.
+# This is done this way in case we need to change it laster
+#
 sub _object_to_key {
   my ( $self, $object ) = @_;
   {
@@ -90,106 +94,84 @@ sub _object_to_key {
 }
 
 sub BUILDARGS {
-    my $class = shift;
+  my $class = shift;
 
-    if ( scalar @_ & 1 ){
-        Carp::croak("Uneven list sent. ERROR: Must be an ordered array that simulates a hash [k,v,k,v]");
-    }
-    my $c = {
-        _ik => [],
-        _ko => {},
-        _kv => {},
-        _ki => {},
-    };
-    while ( @_ ){
-        my $key_object = shift;
-        my $key = $class->_object_to_key( $key_object );
-        my $value = shift;
-        my $index = push @{$c->{_ik}} , $key;
-        $c->{_ki}->{$key} = $index;
-        $c->{_ko}->{$key} = $key_object;
-        $c->{_kv}->{$key} = $value;
-    }
-    return $c;
+  if ( scalar @_ & 1 ) {
+    Carp::croak("Uneven list sent. ERROR: Must be an ordered array that simulates a hash [k,v,k,v]");
+  }
+  my $c = {
+    _ik => [],
+    _ko => {},
+    _kv => {},
+    _ki => {},
+  };
+  while (@_) {
+    my $key_object = shift;
+    my $key        = $class->_object_to_key($key_object);
+    my $value      = shift;
+    my $index      = push @{ $c->{_ik} }, $key;
+    $c->{_ki}->{$key} = $index;
+    $c->{_ko}->{$key} = $key_object;
+    $c->{_kv}->{$key} = $value;
+  }
+  return $c;
 }
 
 sub set {
   my ( $self, $object, $value ) = @_;
-  my $k = $self->_object_to_key($object);
-  if ( $self->_kv_exists($k) ) {
-    $self->_kv_set( $k, $value );
+  my $key = $self->_object_to_key($object);
+  if ( exists $self->{_kv}->{$key} ) {
+    $self->{_kv}->{$key} = $value;
     return;
   }
-  my $i = $self->_ik_push($k);
-  $self->_ki_set( $k, $i );
-  $self->_ko_set( $k, $object );
-  $self->_kv_set( $k, $value );
+  my $index = push @{ $self->{_ik} }, $key;
+  $self->{_ki}->{$key} = $index;
+  $self->{_ko}->{$key} = $object;
+  $self->{_kv}->{$key} = $value;
   return $self;
 }
 
 sub unset {
   my ( $self, $object ) = @_;
-  my $k = $self->_object_to_key($object);
-  unless ( $self->_kv_exists($k) ) {
+  my $key = $self->_object_to_key($object);
+  unless ( exists $self->{_kv}->{$key} ) {
     return $self;
   }
-  my $i = $self->_ki_get($k);
-  $self->_ki_delete($k);
-  $self->_ik_delete($i);
-  $self->_ko_delete($k);
-  $self->_kv_delete($k);
+  my $index = $self->{_ki}->{$key};
+  delete $self->{_ki}->{$key};
+  delete $self->{_ik}->[$index];
+  delete $self->{_ko}->{$key};
+  delete $self->{_kv}->{$key};
   $self->_sync_ki;
   return $self;
 }
 
 sub _sync_ki {
   my ($self) = @_;
-  $self->_ki( {} );
+  $self->{_ki} = {};
   my $i = 0;
-  for ( $self->_ik_elements ) {
-    $self->_ki_set( $_, $i );
+  for ( @{ $self->{_ik} } ) {
+    $self->{_ki}->{$_} = $i;
     $i++;
   }
   return $self;
 }
 
-sub _store_key {
-  my ( $self, $object ) = @_;
-  my $key = $self->_object_to_key($object);
-  $self->_ko_set( $key, $object );
-
-  #  $self->_ki_set( $key, undef ) unless $self->_ki_exists( $key );
-}
-
-sub _erase_key {
-  my ( $self, $object ) = @_;
-  delete $self->{'_key_map'}->{ $self->_object_to_key($object) };
-}
-
-sub _key_address {
-  my ( $self, $object ) = @_;
-  my $key = $self->_object_to_key($object);
-  if ( !exists $self->{'_key_map'}->{$key} ) {
-    return undef;
-  }
-  return $self->{'_key_map'}->{$key}->[1];
-}
-
 sub value {
   my ( $self, $object ) = @_;
-  my $key = $self->_object_to_key( $object );
-  return $self->_kv_get( $key );
+  my $key = $self->_object_to_key($object);
+  return $self->{_kv}->{$key};
 }
 
 sub value_at {
   my ( $self, $index ) = @_;
-  return 'value';
-
+  my $key = $self->{_ik}->[$index];
+  return $self->{_kv}->{$key};
 }
 
 sub values {
   my ($self) = @_;
-  return map { $self->_kv_get( $_ ) } $self->_ik_elements;
+  return map { $self->{_kv}->{$_} } @{ $self->{_ik} };
 }
 
 sub values_ref {
@@ -199,17 +181,18 @@ sub values_ref {
 
 sub keys {
   my ($self) = @_;
-  return map { $self->_ko_get( $_ ) } $self->_ik_elements;
+  return map { $self->{_ko}->{$_} } @{ $self->{_ik} };
 }
 
 sub key_at {
   my ( $self, $index ) = @_;
-  return 'object';
+  my $key = $self->{_ik}->[$index];
+  return $self->{_ko}->{$key};
 }
 
 sub key_object {
   my ( $self, $key ) = @_;
-  return $self->_ko_get( $key );
+  return $self->{_ko}->{$key};
 }
 
 sub move_up {
