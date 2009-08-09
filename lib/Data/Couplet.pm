@@ -4,10 +4,11 @@ package Data::Couplet;
 use strict;
 use warnings;
 use Moose;
+use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
-with 'Data::Couplet::Private';
+extends 'Data::Couplet::Private';
 
 # Initialises the Object.
 #
@@ -18,28 +19,17 @@ sub BUILDARGS {
   if ( scalar @_ & 1 ) {
     Carp::croak("Uneven list sent. ERROR: Must be an ordered array that simulates a hash [k,v,k,v]");
   }
-  my $c = {
-    _ik => [],
-    _ko => {},
-    _kv => {},
-    _ki => {},
-  };
+
+  my $c = Data::Couplet::Private->new();
   while (@_) {
-    my $key_object = shift;
-    my $key        = $class->_object_to_key($key_object);
-    $class->can('_set_kiov')->( $c, $key, $class->can('_index_key')->( $c, $key ), $key_object, shift );
+    $c->_set( shift, shift );
   }
-  return $c;
+  return { %{$c} };
 }
 
 sub set {
   my ( $self, $object, $value ) = @_;
-  my $key = $self->_object_to_key($object);
-  if ( exists $self->{_kv}->{$key} ) {
-    $self->{_kv}->{$key} = $value;
-    return;
-  }
-  $self->_set_kiov( $key, $self->_index_key($key), $object, $value );
+  $self->_set( $object, $value );
   return $self;
 }
 
@@ -119,6 +109,7 @@ sub swap {
   my ( $self, $key_left, $key_right ) = @_;
   return $self;
 }
+
 __PACKAGE__->meta->make_immutable();
 1;
 

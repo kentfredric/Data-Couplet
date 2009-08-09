@@ -1,17 +1,42 @@
 package Data::Couplet::Private;
 
+# ABSTRACT: Private internal bits for Data::Couplet
+
 # $Id:$
 use strict;
 use warnings;
-use Moose::Role;
+use Moose;
 use Carp;
 use namespace::autoclean;
 
-=head1 PRIVATE ATTRIBUTES
+=head1 SYNOPSIS
 
-NO User Servicable Parts Inside.
+This class contains all the private stuff Data::Couplet uses.
 
-Also, this might change yet from a hash quad to something simpler, like
+This arrangement is somewhat experimental, but its benefits are as follows
+
+=over 4
+
+=item - Publically Readable Private Documentation
+
+Ensures that other people hacking on internals have plenty to work with
+
+=item - Private Documentation Seperate from Public
+
+Ensures end users don't get weighed down and tempted by stuff they don't need.
+
+=item - Seperation of Concerns
+
+Seperates logically the interface from the implementation, allowing for more
+disperse changes without worry about breaking things.
+
+=back
+
+=cut
+
+=head1 ATTRIBUTES
+
+These might change yet from a hash quad to something simpler, like
 
     [  k, k, k, ]
     { k => [ i, k, v ], k => [ i, k, v ] }
@@ -20,45 +45,34 @@ Also, this might change yet from a hash quad to something simpler, like
 
 Stores a mapping of Keys to Objects.
 
+    { KEY_SCALAR => $KEY_OBJECT }
+
 This is our internal way of mapping scalar representations of objects back to the objects.
 NB: Because of how the scalarfication works at present, if an object is used for a key that
 has string overload, the overloaded value will be used in the index.
 
 =cut
 
-# Maps Keys to Object/Index pairs.
-#
-# { KEY_SCALAR => $KEY_OBJECT  }
-#
-has _ko => (
-  isa     => 'HashRef',
-  is      => 'rw',
-  default => sub { +{} },
-);
+has _ko => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
 
 =head2 _kv : rw HashRef
 
 Stores a mapping of Keys to Values
+
+    { KEY_SCALAR => $VALUE_OBJECT }
 
 This is our primary datastore, unorderd, this is the part of the data that directly represents
 what you would get with a normal hash.
 
 =cut
 
-# The Primary Key<=> Value Corelation.
-#
-# { KEY_SCALAR => $VALUE_OBJECT }
-#
-
-has _kv => (
-  isa     => 'HashRef',
-  is      => 'rw',
-  default => sub { +{} },
-);
+has _kv => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
 
 =head2 _ki : rw HashRef
 
 Stored a mapping of Keys to Indicies.
+
+    { KEY_SCALAR => $INDEX_SCALAR }
 
 This is required if you need to know where in an array a key is without having
 to search the array for it. It also makes dataset reordering
@@ -66,37 +80,28 @@ much easier, increment values :)
 
 =cut
 
-# This Maps Keys to indicies
-#
-# { KEY_SCALAR => $INDEX_SCALAR }
-#
-
-has _ki => (
-  isa     => 'HashRef',
-  is      => 'rw',
-  default => sub { +{} },
-);
+has _ki => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
 
 =head2 _ik : rw ArrayRef
 
 This keeps our keys in order
 
+    [ KEY_SCALAR , KEY_SCALAR ]
+
 =cut
 
-# The secondary Index=>Key correlation map
-# Note: this is updated last
-# { INDEX_SCALAR => KEY_SCALAR }
+has _ik => ( isa => 'ArrayRef', is => 'rw', default => sub { [] }, );
 
-has _ik => (
-  isa     => 'ArrayRef',
-  is      => 'rw',
-  default => sub { [] },
-);
+=head1 METHODS
 
-# Maps Anything to a usable Key.
-# Essentially, stringify.
-# This is done this way in case we need to change it later
-#
+=head2 ->_object_to_key ( $object ) : String
+
+ Maps Anything to a usable Key.
+ Essentially, stringify.
+ This is done this way in case we need to change it later
+
+=cut
+
 sub _object_to_key {
   my ( $self, $object ) = @_;
   {
@@ -105,20 +110,24 @@ sub _object_to_key {
   }
 }
 
-#
-# Deletes things that are found using an index only.
-#
-#
+=head2 ->_unset_at ( Int $index ) : $self : Modifier
+
+ Deletes things that are found using an index only.
+
+=cut
+
 sub _unset_at {
   my ( $self, $index ) = @_;
   splice @{ $self->{_ik} }, $index, 1;
   return $self;
 }
 
-#
-# Deletes things that are found using a key only
-#
-#
+=head2 ->_unset_key ( String $key ) : $self : Modifier
+
+ Deletes things that are found using a key only
+
+=cut
+
 sub _unset_key {
   my ( $self, $key ) = @_;
 
@@ -130,12 +139,18 @@ sub _unset_key {
 
   # Forget what it means
   delete $self->{_kv}->{$key};
+
+  return $self;
 }
 
-# Move a set of keys in the hash
-# by $amt in $sign direction
-# ->_move_key_range( $start, $stop , -1 ); # move left
-# ->_move_key_range( $start, $stop , +1 ); # move right
+=head2 ->_move_key_range( Int $left , Int $right , Int $jump ) : $self : Modifier
+
+ Move a set of keys in the hash
+ by $amt in $sign direction
+ ->_move_key_range( $start, $stop , -1 ); # move left
+ ->_move_key_range( $start, $stop , +1 ); # move right
+
+=cut
 
 sub _move_key_range {
   my ( $self, $start, $stop, $amt ) = @_;
@@ -145,8 +160,13 @@ sub _move_key_range {
   return $self;
 }
 
-# Returns index numbers for keys AND ASSIGNS THEM
-#
+=head2 ->_index_key ( String $key ) : Int : Modifier
+
+Given a key, asserts it is in the dataset, either by finding it
+or by creating it. Returns where the key is.
+
+=cut
+
 sub _index_key {
   my ( $self, $key ) = @_;
   if ( exists $self->{_ki}->{$key} ) {
@@ -156,9 +176,26 @@ sub _index_key {
   return $index;
 }
 
-# Given a key, records the 3 thins you could want to know for a key
-# Index, Object, Value
-#
+=head2 ->_set ( Any $object , Any $value ) : $self : Modifier
+
+Insertion is easy. Everything that inserts the easy way
+can call this.
+
+=cut
+
+sub _set {
+  my ( $self, $object, $value ) = @_;
+  my $key = $self->_object_to_key($object);
+  $self->_set_kiov( $key, $self->_index_key($key), $object, $value );
+  return $self;
+}
+
+=head2 ->_set_kiov ( String $key , Int $index, Any $object , Any $value ) : $self : Modifier
+
+Handles the part of assigning all the Key => Value association needed in many parts.
+
+=cut
+
 sub _set_kiov {
   my ( $self, $k, $i, $o, $v ) = @_;
   $self->{_ki}->{$k} = $i;
@@ -166,6 +203,13 @@ sub _set_kiov {
   $self->{_kv}->{$k} = $v;
   return $self;
 }
+
+=head2 ->_sync_ki : $self : Modifier
+
+Assume _ki is dead, and _ik is in charge, rebuild
+_ki from _ik
+
+=cut
 
 sub _sync_ki {
   my ($self) = @_;
@@ -177,6 +221,13 @@ sub _sync_ki {
   }
   return $self;
 }
+
+=head2 ->_sync_ik : $self : Modifier
+
+Assume _ik is dead, and _ki is in charge,
+rebuild _ik from _ki
+
+=cut
 
 sub _sync_ik {
   my ($self) = @_;
