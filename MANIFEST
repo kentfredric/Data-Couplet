@@ -1,4 +1,5 @@
 Build.PL
+Changes
 LICENSE
 MANIFEST
 META.json
@@ -9,3 +10,6 @@ lib/Data/Couplet.pm
 lib/Data/Couplet/Private.pm
 t/01_load.t
 t/02_standard_interface.t
+t/release-meta-yaml.t
+t/release-pod-coverage.t
+t/release-pod-syntax.t

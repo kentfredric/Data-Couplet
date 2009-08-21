@@ -15,9 +15,8 @@ WriteMakefile(
   PREREQ_PM    => {
     "Test::More" => '0',
     "namespace::autoclean" => '0',
-    "Test::Exception" => '0',
     "Test::use::ok" => '0',
-    "Moose" => '0.84',
     "Carp" => '0',
+    "Moose" => '0.84',
   },
 );

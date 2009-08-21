@@ -2,24 +2,33 @@
    "resources" : {
       "repository" : "git://github.com/kentfredric/Data-Couplet.git"
    },
+   "generated_by" : "Dist::Zilla::Plugin::MetaJSON version 1.092310",
    "meta-spec" : {
       "version" : 1.4,
       "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
    },
-   "generated_by" : "Dist::Zilla::Plugin::MetaJSON version 1.092071",
    "version" : "0.0100",
    "name" : "Data-Couplet",
    "author" : [
       "Kent Fredric <kentnl at cpan.org>"
    ],
    "license" : "perl",
+   "provides" : {
+      "Data::Couplet::Private" : {
+         "version" : "0.0100",
+         "file" : "lib/Data/Couplet/Private.pm"
+      },
+      "Data::Couplet" : {
+         "version" : "0.0100",
+         "file" : "lib/Data/Couplet.pm"
+      }
+   },
    "requires" : {
       "Test::More" : "0",
       "namespace::autoclean" : "0",
-      "Test::Exception" : "0",
       "Test::use::ok" : "0",
-      "Moose" : "0.84",
-      "Carp" : "0"
+      "Carp" : "0",
+      "Moose" : "0.84"
    },
    "abstract" : "Yet another (But Hopefully Better) Key-Value Storage mechanism"
 }
