@@ -32,6 +32,9 @@ disperse changes without worry about breaking things.
 
 =back
 
+The above structure could also be reverted back to something more sane, but you
+shouldn't mind, you don't rely on private methods anyway, do you? :)
+
 =cut
 
 =head1 ATTRIBUTES
@@ -154,7 +157,7 @@ sub _unset_key {
 
 sub _move_key_range {
   my ( $self, $start, $stop, $amt ) = @_;
-  for ( $start .. $stop ) {
+  for( $start .. $stop  ) {
     $self->{_ki}->{ $self->{_ik}->[$_] } += $amt;
   }
   return $self;

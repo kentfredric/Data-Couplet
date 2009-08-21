@@ -19,28 +19,23 @@ sub do_test(&) {
   } or ok( 0, "Test $t mystically failed ( @ $caller[2] ) : $@" );
 }
 
-sub trace($) { }
+sub DEBUG() { 0 }
 
-BEGIN {
-  if (1) {    #& $ENV{DEBUG} ) {
-    *trace = sub($) {
-      note( dump(shift) );
-    };
-  }
+sub trace($) {
+  note( dump(shift) );
 }
 
 my $object;
-
 do_test {
   $object = new_ok(Couplet);
-  trace($object);
+  trace($object) if DEBUG;
 }
 for 1 .. 2;
 
 do_test {
   $object->set( "Hello", "World" );
   is( $object->value("Hello"), "World", "Data Storage Works" );
-  trace($object);
+  trace($object) if DEBUG;
 }
 for 3 .. 4;
 
@@ -48,27 +43,27 @@ do_test {    #
   my $key = ["Magical Hash"];
   $object->set( $key, "World" );
   is( $object->value($key), "World", "Data Storage Works(Object Key)" );
-  trace($object);
+  trace($object) if DEBUG;
 }
 for 5 .. 6;
 
 do_test {
   my @values = $object->keys;
   is_deeply( \@values, [ "Hello", ["Magical Hash"], ["Magical Hash"] ], "Keys Retain Data" );
-  trace( \@values );
+  trace( \@values ) if DEBUG;
 }
 for 7 .. 8;
 
 do_test {
   my @values = $object->values;
   is_deeply( \@values, [ "World", "World", "World" ], '->values returns the right stuff' );
-  trace( \@values );
+  trace( \@values ) if DEBUG;
 }
 for 9 .. 10;
 
 do_test {
   $object = new_ok( Couplet, [ 'A' => 'B', 'C' => 'D' ] );
-  trace($object);
+  trace($object) if DEBUG;
 }
 for 11;
 
@@ -84,7 +79,7 @@ for 13;
 
 do_test {
   $object = new_ok( Couplet, [qw( A B C D E F G H I J K L )] );
-  trace($object);
+  trace($object) if DEBUG;
 }
 for 14;
 
@@ -92,8 +87,8 @@ do_test {
   $object->unset('A');
   my @values = $object->values;
   is_deeply( \@values, [qw( D F H J L )], "Delete Head" );
-  trace($object);
-  trace( \@values );
+  trace($object) if DEBUG;
+  trace( \@values ) if DEBUG;
 }
 for 15;
 
@@ -101,8 +96,8 @@ do_test {
   $object->unset('E');
   my @values = $object->values;
   is_deeply( \@values, [qw( D H J L )], "Delete Second" );
-  trace($object);
-  trace( \@values );
+  trace($object) if DEBUG;
+  trace( \@values ) if DEBUG;
 }
 for 16;
 
@@ -110,8 +105,8 @@ do_test {
   $object->unset('K');
   my @values = $object->values;
   is_deeply( \@values, [qw( D H J )], "Delete Last" );
-  trace($object);
-  trace( \@values );
+  trace($object) if DEBUG;
+  trace( \@values ) if DEBUG;
 }
 for 17;
 
@@ -121,8 +116,8 @@ do_test {
   $object->unset('I');
   my @values = $object->values;
   is_deeply( \@values, [qw()], "Delete All" );
-  trace($object);
-  trace( \@values );
+  trace($object) if DEBUG;
+  trace( \@values ) if DEBUG;
 }
 for 18;
 
@@ -132,11 +127,10 @@ do_test {
   $object->unset('I');
   my @values = $object->values;
   is_deeply( \@values, [qw()], "Delete Imaginary" );
-  trace($object);
-  trace( \@values );
+  trace($object) if DEBUG;
+  trace( \@values ) if DEBUG;
 }
 for 18;
-
 
 done_testing($t);
 
