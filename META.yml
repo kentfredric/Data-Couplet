@@ -1,0 +1,20 @@
+---
+abstract: 'Yet another (But Hopefully Better) Key-Value Storage mechanism'
+author:
+  - 'Kent Fredric <kentnl at cpan.org>'
+generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.092071'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Data-Couplet
+requires:
+  Carp: 0
+  Moose: 0.84
+  Test::Exception: 0
+  Test::More: 0
+  Test::use::ok: 0
+  namespace::autoclean: 0
+resources:
+  repository: git://github.com/kentfredric/Data-Couplet.git
+version: 0.0100

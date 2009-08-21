@@ -1,0 +1,11 @@
+Build.PL
+LICENSE
+MANIFEST
+META.json
+META.yml
+Makefile.PL
+README
+lib/Data/Couplet.pm
+lib/Data/Couplet/Private.pm
+t/01_load.t
+t/02_standard_interface.t
