@@ -1,5 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Fixed some build deps
+
+0.0100    2009-08-21 16:24:40 UTC
           First version.
 
