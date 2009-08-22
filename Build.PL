@@ -15,9 +15,10 @@ my $build = Module::Build->new(
   requires      => {
     "Test::More" => '0',
     "namespace::autoclean" => '0',
+    "Data::Dump" => '0',
     "Test::use::ok" => '0',
-    "Carp" => '0',
     "Moose" => '0.84',
+    "Carp" => '0',
   },
   script_files => [ qw() ],
 );

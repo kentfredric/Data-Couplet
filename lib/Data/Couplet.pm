@@ -1,5 +1,5 @@
 package Data::Couplet;
-our $VERSION = '0.0100';
+our $VERSION = '0.0101';
 
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
@@ -164,7 +164,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.0100
+version 0.0101
 
 =head1 ALPHA CODE
 

@@ -1,5 +1,5 @@
 package Data::Couplet::Private;
-our $VERSION = '0.0100';
+our $VERSION = '0.0101';
 
 
 # ABSTRACT: Private internal bits for Data::Couplet
@@ -136,7 +136,7 @@ Data::Couplet::Private - Private internal bits for Data::Couplet
 
 =head1 VERSION
 
-version 0.0100
+version 0.0101
 
 =head1 SYNOPSIS
 
