@@ -1,16 +1,18 @@
+use strict;
+use warnings;
+
 package Data::Couplet;
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 # $Id:$
-use strict;
-use warnings;
 use Moose;
 use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
 extends 'Data::Couplet::Private';
+with('MooseX::Clone');
 
 =head1 ALPHA CODE
 
@@ -28,14 +30,14 @@ Why is this module different?
 
 =item 1. No Tied Hashes.
 
-Tied hashes are IMO Ugly. OO Objects are far more handy for many things. Especially
+Tied hashes are IMO Ugly. Objects are far more handy for many things. Especially
 in moose world. You want tied hashes, do it yourself.
 
 =item 2. Trying Hard to preserve non-scalar keys.
 
 I want it to be possible, to retain arbitrary references used as keys.
 
-=item 3. Permutative.
+=item 3. Permutation.
 
 Its not here yet, but there I<Will> eventually be reordering functions.
 
@@ -44,8 +46,8 @@ Its not here yet, but there I<Will> eventually be reordering functions.
 I seriously looked all over CPAN for something that suited my needs and didn't find any.
 
 I then tried with Tie::IxHash::ButMoreFun, and then discovered that how I was
-using Tie::IxHash wasn't even sustainable on different versions of perl, and
-basedd on the 1997 release date, I gave up on seeing that fixed.
+using Tie::IxHash wasn't even sustainable on different versions of Perl, and
+based on the 1997 release date, I gave up on seeing that fixed.
 
 =cut
 
@@ -80,15 +82,15 @@ Create a new Data::Couplet entity using a series of ordered pairs.
 =cut
 
 sub BUILDARGS {
-  my $class = shift;
-
-  if ( scalar @_ & 1 ) {
-    Carp::croak("Uneven list sent. ERROR: Must be an ordered array that simulates a hash [k,v,k,v]");
+  my @args  = @_;
+  my $class = shift @args;
+  if ( scalar @args & 1 ) {
+    Carp::croak('Uneven list sent. ERROR: Must be an ordered array that simulates a hash [k,v,k,v]');
   }
 
   my $c = Data::Couplet::Private->new();
-  while (@_) {
-    $c->_set( shift, shift );
+  while (@args) {
+    $c->_set( shift @args, shift @args );
   }
   return { %{$c} };
 }
@@ -99,7 +101,7 @@ sub BUILDARGS {
 
 =head3 ->set( Any $object, Any  $value ) : $self : Modifier
 
-Record the association of a key ( any object that can be stringified )  to a value.
+Record the association of a key ( any object that can be coerced into a string )  to a value.
 
 New entries are pushed on the logical right hand end of it in array context.
 
@@ -159,13 +161,13 @@ sub unset_at {
 =head3 ->unset_key( Str $key ) : $self : Modifier
 
 This is what ->unset ultimately calls, except ->unset does implicit
-object_to_key conversion first. At present, thats not anything huge, its just
-C<$object> to stringify it. But this may change at some future time. So use that
+object_to_key conversion first. At present, that's not anything huge, its just
+C<$object> to convert it to a string. But this may change at some future time. So use that
 method instead.
 
 =cut
 
-sub unset_key($) {
+sub unset_key {
   my ( $self, $key ) = @_;
   unless ( exists $self->{_kv}->{$key} ) {
     return $self;
@@ -173,7 +175,7 @@ sub unset_key($) {
   my $index = $self->{_ki}->{$key};
   $self->_unset_at($index);
   $self->_unset_key($key);
-  $self->_move_key_range( $index, $#{ $self->{_ik} }, -1 );
+  $self->_move_key_range( $index, $#{ $self->{_ik} }, 0 - 1 );
   return $self;
 }
 
@@ -196,7 +198,7 @@ sub value {
 
 =head3 ->value_at( Int $index ) : Any $value
 
-Like value, but you need to know where in the dataset the item is.
+Like value, but you need to know where in the data set the item is.
 
 =cut
 
@@ -224,8 +226,8 @@ Just some nice syntax for [$o->values]
 =cut
 
 sub values_ref {
-  my ($self) = @_;
-  return [ $self->values(@_) ];
+  my ( $self, @args ) = @_;
+  return [ $self->values(@args) ];
 }
 
 =head3 ->key_values() : Any @list
@@ -243,8 +245,8 @@ to the constructor.
 =cut
 
 sub key_values {
-  my ( $self ) = @_;
-  return map { $self->{_ko}->{$_}, $self->{_kv}->{$_} } @{ $self->{_ik} };
+  my ($self) = @_;
+  return map { ( $self->{_ko}->{$_}, $self->{_kv}->{$_} ) } @{ $self->{_ik} };
 }
 
 =head3 ->key_values_paired() : Any[ArrayRef] @list
@@ -258,7 +260,7 @@ Returns like ->key_values does but key/value is grouped for your convenience
 =cut
 
 sub key_values_paired {
-  my ( $self ) = @_;
+  my ($self) = @_;
   return map { [ $self->{_ko}->{$_}, $self->{_kv}->{$_} ] } @{ $self->{_ik} };
 }
 
@@ -344,7 +346,7 @@ sub swap {
   my ( $self, $key_left, $key_right ) = @_;
   return $self;
 }
-
+no Moose;
 __PACKAGE__->meta->make_immutable();
 1;
 

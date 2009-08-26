@@ -2,6 +2,11 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
           Versioning Scheme switched to AutoVersion::Relative
+          Added MooseX::Clone support
+          Added MooseX::Types Deps
+          Added MooseX::Has::Sugar Deps
+          Added more author tests
+          Assload of Typos Fixed
 
 0.0101    2009-08-22 10:09:57 UTC
           Fixed some build deps
