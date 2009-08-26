@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Versioning Scheme switched to AutoVersion::Relative
+
+0.0101    2009-08-22 10:09:57 UTC
           Fixed some build deps
 
 0.0100    2009-08-21 16:24:40 UTC
