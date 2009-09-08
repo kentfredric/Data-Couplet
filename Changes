@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          DZIL CompileTests
           Versioning Scheme switched to AutoVersion::Relative
           Added MooseX::Clone support
           Added MooseX::Types Deps
