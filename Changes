@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Clone Support works and tested.
+          Clones are MX::Cloned, and deep.
           minor++ # version scheme incompatible
           dist.ini now shipping with dist
           DZIL CompileTests
