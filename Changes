@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          dist.ini now shipping with dist
           DZIL CompileTests
           Versioning Scheme switched to AutoVersion::Relative
           Added MooseX::Clone support
