@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.0101
+    version 0.02003813
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -14,7 +14,7 @@ DIFFERENT
     Why is this module different?
 
     1. No Tied Hashes.
-        Tied hashes are IMO Ugly. OO Objects are far more handy for many
+        Tied hashes are IMO Ugly. Objects are far more handy for many
         things. Especially in moose world. You want tied hashes, do it
         yourself.
 
@@ -22,7 +22,7 @@ DIFFERENT
         I want it to be possible, to retain arbitrary references used as
         keys.
 
-    3. Permutative.
+    3. Permutation.
         Its not here yet, but there *Will* eventually be reordering
         functions.
 
@@ -31,7 +31,7 @@ DIFFERENT
 
     I then tried with Tie::IxHash::ButMoreFun, and then discovered that how
     I was using Tie::IxHash wasn't even sustainable on different versions of
-    perl, and basedd on the 1997 release date, I gave up on seeing that
+    Perl, and based on the 1997 release date, I gave up on seeing that
     fixed.
 
 SYNOPSIS
@@ -56,8 +56,8 @@ METHODS
 
   ENTRY CREATION
    ->set( Any $object, Any  $value ) : $self : Modifier
-    Record the association of a key ( any object that can be stringified )
-    to a value.
+    Record the association of a key ( any object that can be coerced into a
+    string ) to a value.
 
     New entries are pushed on the logical right hand end of it in array
     context.
@@ -90,9 +90,9 @@ METHODS
 
    ->unset_key( Str $key ) : $self : Modifier
     This is what ->unset ultimately calls, except ->unset does implicit
-    object_to_key conversion first. At present, thats not anything huge, its
-    just $object to stringify it. But this may change at some future time.
-    So use that method instead.
+    object_to_key conversion first. At present, that's not anything huge,
+    its just $object to convert it to a string. But this may change at some
+    future time. So use that method instead.
 
   VALUE MANIPULATION
    ->value( Any $object ) : Any $value
@@ -100,7 +100,7 @@ METHODS
     semantics of what object keys are.
 
    ->value_at( Int $index ) : Any $value
-    Like value, but you need to know where in the dataset the item is.
+    Like value, but you need to know where in the data set the item is.
 
    ->values() : Any @list
     returns an array of all stored values in order.

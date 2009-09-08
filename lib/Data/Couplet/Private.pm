@@ -1,36 +1,42 @@
+use strict;
+use warnings;
+
 package Data::Couplet::Private;
-our $VERSION = '0.0101';
+our $VERSION = '0.02003813';
 
 
 # ABSTRACT: Private internal bits for Data::Couplet
 
 # $Id:$
-use strict;
-use warnings;
 use Moose;
+use MooseX::Types::Moose qw( :all );
+use MooseX::Has::Sugar qw( rw );
 use Carp;
 use namespace::autoclean;
+with('MooseX::Clone');
 
 
 
-has _ko => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
+has '_ko' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
 
 
-has _kv => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
+has '_kv' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
 
 
-has _ki => ( isa => 'HashRef', is => 'rw', default => sub { +{} }, );
+has '_ki' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
 
 
-has _ik => ( isa => 'ArrayRef', is => 'rw', default => sub { [] }, );
+has '_ik' => ( isa => ArrayRef, rw, default => sub { [] }, traits => [qw( Clone )] );
 
 
 sub _object_to_key {
   my ( $self, $object ) = @_;
-  {
-    no warnings;
-    return "$object";
+  my $key;
+  if ( not defined $object ) {
+    Carp::croak('Cant Stringify Undef for use as a key.');
   }
+  $key = "$object";
+  return $key;
 }
 
 
@@ -59,7 +65,7 @@ sub _unset_key {
 
 sub _move_key_range {
   my ( $self, $start, $stop, $amt ) = @_;
-  for( $start .. $stop  ) {
+  for ( $start .. $stop ) {
     $self->{_ki}->{ $self->{_ik}->[$_] } += $amt;
   }
   return $self;
@@ -121,7 +127,11 @@ sub _sync_ik {
     my $index = ( push @{ $self->{_ik} }, $key ) - 1;
     $self->{_ki}->{$key} = $index;
   }
+  return $self;
 }
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;
 
@@ -136,7 +146,7 @@ Data::Couplet::Private - Private internal bits for Data::Couplet
 
 =head1 VERSION
 
-version 0.0101
+version 0.02003813
 
 =head1 SYNOPSIS
 
@@ -146,17 +156,17 @@ This arrangement is somewhat experimental, but its benefits are as follows
 
 =over 4
 
-=item - Publically Readable Private Documentation
+=item - Publicly Readable Private Documentation
 
 Ensures that other people hacking on internals have plenty to work with
 
-=item - Private Documentation Seperate from Public
+=item - Private Documentation Separate from Public
 
 Ensures end users don't get weighed down and tempted by stuff they don't need.
 
-=item - Seperation of Concerns
+=item - Separation of Concerns
 
-Seperates logically the interface from the implementation, allowing for more
+Separates logically the interface from the implementation, allowing for more
 disperse changes without worry about breaking things.
 
 =back 
@@ -180,7 +190,7 @@ Stores a mapping of Keys to Objects.
     { KEY_SCALAR => $KEY_OBJECT }
 
 This is our internal way of mapping scalar representations of objects back to the objects.
-NB: Because of how the scalarfication works at present, if an object is used for a key that
+NB: Because of how the conversion to scalar works at present, if an object is used for a key that
 has string overload, the overloaded value will be used in the index.
 
 
@@ -191,19 +201,19 @@ Stores a mapping of Keys to Values
 
     { KEY_SCALAR => $VALUE_OBJECT }
 
-This is our primary datastore, unorderd, this is the part of the data that directly represents
+This is our primary data store, unordered, this is the part of the data that directly represents
 what you would get with a normal hash.
 
 
 
 =head2 _ki : rw HashRef
 
-Stored a mapping of Keys to Indicies.
+Stored a mapping of Keys to Indexes.
 
     { KEY_SCALAR => $INDEX_SCALAR }
 
 This is required if you need to know where in an array a key is without having
-to search the array for it. It also makes dataset reordering
+to search the array for it. It also makes data set reordering
 much easier, increment values :)
 
 
@@ -249,7 +259,7 @@ This keeps our keys in order
 
 =head2 ->_index_key ( String $key ) : Int : Modifier
 
-Given a key, asserts it is in the dataset, either by finding it
+Given a key, asserts it is in the data set, either by finding it
 or by creating it. Returns where the key is.
 
 

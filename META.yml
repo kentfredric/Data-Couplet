@@ -2,7 +2,7 @@
 abstract: 'Yet another (But Hopefully Better) Key-Value Storage mechanism'
 author:
   - 'Kent Fredric <kentnl at cpan.org>'
-generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.092310'
+generated_by: 'Dist::Zilla::Plugin::MetaYAML version 1.092450'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -11,17 +11,21 @@ name: Data-Couplet
 provides:
   Data::Couplet:
     file: lib/Data/Couplet.pm
-    version: 0.0101
+    version: 0.02003813
   Data::Couplet::Private:
     file: lib/Data/Couplet/Private.pm
-    version: 0.0101
+    version: 0.02003813
 requires:
   Carp: 0
   Data::Dump: 0
   Moose: 0.84
+  MooseX::Clone: 0.04
+  MooseX::Has::Sugar: 0.0404
+  MooseX::Types: 0.19
+  MooseX::Types::Moose: 0.19
   Test::More: 0
   Test::use::ok: 0
   namespace::autoclean: 0
 resources:
   repository: git://github.com/kentfredric/Data-Couplet.git
-version: 0.0101
+version: 0.02003813
