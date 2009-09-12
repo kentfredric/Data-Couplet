@@ -13,7 +13,7 @@ use Carp;
 use namespace::autoclean;
 
 extends 'Data::Couplet::Private';
-with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount' );
+with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount', 'Data::Couplet::Plugin::BasicReorder' );
 
 =head1 ALPHA CODE
 
@@ -182,8 +182,8 @@ sub unset_at {
   @indices = grep {
     $self->key_at($_) ? 1 : do {
       Carp::carp("Warning: index $_ does not exist already");
-      0
-    }
+      0;
+      }
   } @indices;
   my $unset = 0;
   foreach my $index (@indices) {
@@ -363,37 +363,6 @@ sub key_object_at {
   my ( $self, $index ) = @_;
   __all_int($index);
   return $self->{_ko}->{ $self->key_at($index) };
-}
-
-=head2 TODO
-
-=cut
-
-=head3 ->move_up( Any $object | String $key , Int $amount ) : $self : Modifier
-
-=cut
-
-sub move_up {
-  my ( $self, $object, $stride ) = @_;
-  return $self;
-}
-
-=head3 ->move_down( Any $object | String $key , Int $amount ) : $self : Modifier
-
-=cut
-
-sub move_down {
-  my ( $self, $object, $stride ) = @_;
-  return $self;
-}
-
-=head3 ->swap( Any|Str $key_left, Any|Str $key_right  ) : $self : Modifier
-
-=cut
-
-sub swap {
-  my ( $self, $key_left, $key_right ) = @_;
-  return $self;
 }
 
 no Moose;
