@@ -7,7 +7,7 @@
       "version" : 1.4,
       "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
    },
-   "version" : "0.02003813",
+   "version" : "0.02004206",
    "name" : "Data-Couplet",
    "author" : [
       "Kent Fredric <kentnl at cpan.org>"
@@ -15,11 +15,11 @@
    "license" : "perl",
    "provides" : {
       "Data::Couplet::Private" : {
-         "version" : "0.02003813",
+         "version" : "0.02004206",
          "file" : "lib/Data/Couplet/Private.pm"
       },
       "Data::Couplet" : {
-         "version" : "0.02003813",
+         "version" : "0.02004206",
          "file" : "lib/Data/Couplet.pm"
       }
    },

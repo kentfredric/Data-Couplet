@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.02003813
+    version 0.02004206
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -69,7 +69,7 @@ METHODS
       # { 'a' => 'e', 'c' => 'd', 'e' => 'a' }
 
   ENTRY REMOVAL
-   ->unset( Any $object ) : $self : Modifier
+   ->unset( Array[Any] @objects ) : $self : Modifier
     Entries are ripped out of the structure, and all items moved around to
     fill the void.
 
@@ -79,7 +79,7 @@ METHODS
       ->unset('a');
       # { 'e' => 'f' }
 
-   ->unset_at( Int $index ) : $self : Modifier
+   ->unset_at( Array[Int] @indices ) : $self : Modifier
     Like ->unset, except you know where ( logically ) in the order off
     things the entry you wish to delete is.
 
@@ -88,7 +88,7 @@ METHODS
 
     Should be identical to the above code.
 
-   ->unset_key( Str $key ) : $self : Modifier
+   ->unset_key( Array[Str] @keys ) : $self : Modifier
     This is what ->unset ultimately calls, except ->unset does implicit
     object_to_key conversion first. At present, that's not anything huge,
     its just $object to convert it to a string. But this may change at some
@@ -148,6 +148,9 @@ METHODS
    ->move_up( Any $object | String $key , Int $amount ) : $self : Modifier
    ->move_down( Any $object | String $key , Int $amount ) : $self : Modifier
    ->swap( Any|Str $key_left, Any|Str $key_right  ) : $self : Modifier
+   ->count() : Int
+    Number of items contained
+
 AUTHOR
       Kent Fredric <kentnl at cpan.org>
 

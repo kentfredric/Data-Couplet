@@ -11,10 +11,10 @@ name: Data-Couplet
 provides:
   Data::Couplet:
     file: lib/Data/Couplet.pm
-    version: 0.02003813
+    version: 0.02004206
   Data::Couplet::Private:
     file: lib/Data/Couplet/Private.pm
-    version: 0.02003813
+    version: 0.02004206
 requires:
   Carp: 0
   Data::Dump: 0
@@ -28,4 +28,4 @@ requires:
   namespace::autoclean: 0
 resources:
   repository: git://github.com/kentfredric/Data-Couplet.git
-version: 0.02003813
+version: 0.02004206

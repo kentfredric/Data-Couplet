@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet;
-our $VERSION = '0.02003813';
+our $VERSION = '0.02004206';
 
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
@@ -46,26 +46,36 @@ sub set {
 
 
 sub unset {
-  my ( $self, $object ) = @_;
-  return $self->unset_key( $self->_object_to_key($object) );
+  my ( $self, @objects ) = @_;
+  foreach my $object (@objects) {
+    $self->unset_key( $self->_object_to_key($object) );
+  }
+  return $self;
 }
 
 
 sub unset_at {
-  my ( $self, $index ) = @_;
-  return $self->unset_key( $self->key_at($index) );
+  my ( $self, @indices ) = @_;
+  my $unset = 0;
+  foreach my $index (@indices) {
+    $self->unset_key( $self->key_at( $index - $unset ) );
+    $unset++;
+  }
+  return $self;
 }
 
 
 sub unset_key {
-  my ( $self, $key ) = @_;
-  unless ( exists $self->{_kv}->{$key} ) {
-    return $self;
+  my ( $self, @keys ) = @_;
+  foreach my $key (@keys) {
+
+    #Skip any keys that aren't set
+    next unless ( exists $self->{_kv}->{$key} );
+    my $index = $self->{_ki}->{$key};
+    $self->_unset_at($index);
+    $self->_unset_key($key);
+    $self->_move_key_range( $index, $#{ $self->{_ik} }, 0 - 1 );
   }
-  my $index = $self->{_ki}->{$key};
-  $self->_unset_at($index);
-  $self->_unset_key($key);
-  $self->_move_key_range( $index, $#{ $self->{_ik} }, 0 - 1 );
   return $self;
 }
 
@@ -151,6 +161,14 @@ sub swap {
   my ( $self, $key_left, $key_right ) = @_;
   return $self;
 }
+
+
+sub count {
+  my ($self) = @_;
+
+  return scalar $self->keys;
+}
+
 no Moose;
 __PACKAGE__->meta->make_immutable();
 1;
@@ -166,7 +184,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02003813
+version 0.02004206
 
 =head1 ALPHA CODE
 
@@ -258,7 +276,7 @@ New entries are pushed on the logical right hand end of it in array context.
 
 
 
-=head3 ->unset( Any $object ) : $self : Modifier
+=head3 ->unset( Array[Any] @objects ) : $self : Modifier
 
 Entries are ripped out of the structure, and all items moved around to fill the void.
 
@@ -270,7 +288,7 @@ Entries are ripped out of the structure, and all items moved around to fill the 
 
 
 
-=head3 ->unset_at( Int $index ) : $self : Modifier
+=head3 ->unset_at( Array[Int] @indices ) : $self : Modifier
 
 Like ->unset, except you know where ( logically ) in the order
 off things the entry you wish to delete is.
@@ -282,7 +300,7 @@ Should be identical to the above code.
 
 
 
-=head3 ->unset_key( Str $key ) : $self : Modifier
+=head3 ->unset_key( Array[Str] @keys ) : $self : Modifier
 
 This is what ->unset ultimately calls, except ->unset does implicit
 object_to_key conversion first. At present, that's not anything huge, its just
@@ -389,6 +407,12 @@ by ID.
 
 
 =head3 ->swap( Any|Str $key_left, Any|Str $key_right  ) : $self : Modifier
+
+
+
+=head3 ->count() : Int
+
+Number of items contained
 
 
 
