@@ -3,6 +3,8 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           Added a plugin infrastructure w/ Roles.
           Moved ->count to role composition ( you wont notice this )
+          Increased input strictness with really basic MX::Types based input validation.
+           ( if you're going to be using _key or _at methods, use them properly ! :) )
 
 0.02004206 2009-09-12 06:01:08 UTC
           Support for multiple-value commands ( Thanks James Laver )

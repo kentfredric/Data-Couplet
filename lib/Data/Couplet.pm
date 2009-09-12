@@ -1,5 +1,5 @@
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 package Data::Couplet;
 
@@ -7,12 +7,13 @@ package Data::Couplet;
 
 # $Id:$
 use Moose;
+use MooseX::Types::Moose qw( :all );
 use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
 extends 'Data::Couplet::Private';
-with('MooseX::Clone', 'Data::Couplet::Plugin::KeyCount');
+with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount' );
 
 =head1 ALPHA CODE
 
@@ -156,8 +157,27 @@ Should be identical to the above code.
 
 =cut
 
+sub __all_int {
+  my (@items) = @_;
+  for ( 0 .. $#items ) {
+    my $v = $items[$_];
+    carp("Token $_ is not an Int: $v ") unless is_Int($v);
+  }
+  return 1;
+}
+
+sub __all_str {
+  my (@items) = @_;
+  for ( 0 .. $#items ) {
+    my $v = $items[$_];
+    carp("Token $_ is not a Str: $v ") unless is_Str($v);
+  }
+  return 1;
+}
+
 sub unset_at {
   my ( $self, @indices ) = @_;
+  __all_int(@indices);
   my $unset = 0;
   foreach my $index (@indices) {
     $self->unset_key( $self->key_at( $index - $unset ) );
@@ -177,6 +197,7 @@ method instead.
 
 sub unset_key {
   my ( $self, @keys ) = @_;
+  __all_str(@keys);
   foreach my $key (@keys) {
 
     #Skip any keys that aren't set
@@ -214,6 +235,7 @@ Like value, but you need to know where in the data set the item is.
 
 sub value_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   my $key = $self->{_ik}->[$index];
   return $self->{_kv}->{$key};
 }
@@ -297,6 +319,7 @@ Given an index, return the key that holds that place.
 
 sub key_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   return $self->{_ik}->[$index];
 }
 
@@ -311,6 +334,7 @@ asked us for our internal key name.
 
 sub key_object {
   my ( $self, $key ) = @_;
+  __all_str($key);
   return $self->{_ko}->{$key};
 }
 
@@ -323,6 +347,7 @@ by ID.
 
 sub key_object_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   return $self->{_ko}->{ $self->key_at($index) };
 }
 
