@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.02004206
+    version 0.02004222
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -143,13 +143,6 @@ METHODS
    ->key_object_at( Int $index ) : Any $object
     As with key_object, except partially useful, because you can fetch by
     ID.
-
-  TODO
-   ->move_up( Any $object | String $key , Int $amount ) : $self : Modifier
-   ->move_down( Any $object | String $key , Int $amount ) : $self : Modifier
-   ->swap( Any|Str $key_left, Any|Str $key_right  ) : $self : Modifier
-   ->count() : Int
-    Number of items contained
 
 AUTHOR
       Kent Fredric <kentnl at cpan.org>

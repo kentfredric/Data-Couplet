@@ -1,20 +1,21 @@
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 
 package Data::Couplet;
-our $VERSION = '0.02004206';
+our $VERSION = '0.02004222';
 
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 # $Id:$
 use Moose;
+use MooseX::Types::Moose qw( :all );
 use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
 extends 'Data::Couplet::Private';
-with('MooseX::Clone');
+with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount', 'Data::Couplet::Plugin::BasicReorder' );
 
 
 
@@ -54,11 +55,44 @@ sub unset {
 }
 
 
+sub __all_int {
+  my (@items) = @_;
+  for ( 0 .. $#items ) {
+    my $v = $items[$_];
+    carp("Token $_ is not an Int: $v ") unless is_Int($v);
+  }
+  return 1;
+}
+
+sub __all_str {
+  my (@items) = @_;
+  for ( 0 .. $#items ) {
+    my $v = $items[$_];
+    carp("Token $_ is not a Str: $v ") unless is_Str($v);
+  }
+  return 1;
+}
+
 sub unset_at {
   my ( $self, @indices ) = @_;
+  __all_int(@indices);
+  @indices = sort { $a <=> $b } @indices;
+  @indices = grep {
+    $self->key_at($_) ? 1 : do {
+      Carp::carp("Warning: index $_ does not exist already");
+      0;
+      }
+  } @indices;
   my $unset = 0;
   foreach my $index (@indices) {
-    $self->unset_key( $self->key_at( $index - $unset ) );
+    my $fake_index = ( $index - $unset );
+    my $key        = $self->key_at($fake_index);
+    if ( not defined $key ) {
+      Carp::carp("Cant delete index $index($fake_index), it has no key.");
+    }
+    else {
+      $self->unset_key($key);
+    }
     $unset++;
   }
   return $self;
@@ -67,6 +101,7 @@ sub unset_at {
 
 sub unset_key {
   my ( $self, @keys ) = @_;
+  __all_str(@keys);
   foreach my $key (@keys) {
 
     #Skip any keys that aren't set
@@ -90,6 +125,7 @@ sub value {
 
 sub value_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   my $key = $self->{_ik}->[$index];
   return $self->{_kv}->{$key};
 }
@@ -128,45 +164,22 @@ sub keys {
 
 sub key_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   return $self->{_ik}->[$index];
 }
 
 
 sub key_object {
   my ( $self, $key ) = @_;
+  __all_str($key);
   return $self->{_ko}->{$key};
 }
 
 
 sub key_object_at {
   my ( $self, $index ) = @_;
+  __all_int($index);
   return $self->{_ko}->{ $self->key_at($index) };
-}
-
-
-
-sub move_up {
-  my ( $self, $object, $stride ) = @_;
-  return $self;
-}
-
-
-sub move_down {
-  my ( $self, $object, $stride ) = @_;
-  return $self;
-}
-
-
-sub swap {
-  my ( $self, $key_left, $key_right ) = @_;
-  return $self;
-}
-
-
-sub count {
-  my ($self) = @_;
-
-  return scalar $self->keys;
 }
 
 no Moose;
@@ -184,7 +197,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02004206
+version 0.02004222
 
 =head1 ALPHA CODE
 
@@ -391,28 +404,6 @@ asked us for our internal key name.
 
 As with key_object, except partially useful, because you can fetch
 by ID.
-
-
-
-=head2 TODO
-
-
-
-=head3 ->move_up( Any $object | String $key , Int $amount ) : $self : Modifier
-
-
-
-=head3 ->move_down( Any $object | String $key , Int $amount ) : $self : Modifier
-
-
-
-=head3 ->swap( Any|Str $key_left, Any|Str $key_right  ) : $self : Modifier
-
-
-
-=head3 ->count() : Int
-
-Number of items contained
 
 
 

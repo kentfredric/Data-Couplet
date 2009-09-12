@@ -9,7 +9,7 @@ WriteMakefile(
   NAME      => 'Data::Couplet',
   AUTHOR    => 'Kent\ Fredric\ \<kentnl\ at\ cpan\.org\>',
   ABSTRACT  => 'Yet\ another\ \(But\ Hopefully\ Better\)\ Key\-Value\ Storage\ mechanism',
-  VERSION   => '0.02004206',
+  VERSION   => '0.02004222',
   EXE_FILES => [ qw() ],
   (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM    => {
