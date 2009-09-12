@@ -9,6 +9,8 @@ use Moose::Role;
 
 use namespace::autoclean;
 
+with 'Data::Couplet::Role::Plugin';
+
 =head3 ->count() : Int
 
 Number of items contained
