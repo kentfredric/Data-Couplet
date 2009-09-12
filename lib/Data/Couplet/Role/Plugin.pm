@@ -1,10 +1,12 @@
-package Data::Couplet::Role::Plugin;
-
-# ABSTRACT: A Generalised Role for classes to Aggregatedly extend Data::Couplet
-
 use strict;
 use warnings;
+
+package Data::Couplet::Role::Plugin;
+
+# ABSTRACT: A Generalised Role for classes to extend Data::Couplet via aggregation.
+
 use Moose::Role;
+use namespace::autoclean;
 
 =head1 SYNOPSIS
 
@@ -50,5 +52,6 @@ Then later
 
 =cut
 
+no Moose::Role;
 1;
 

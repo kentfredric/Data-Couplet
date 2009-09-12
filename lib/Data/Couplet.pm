@@ -12,7 +12,7 @@ use Carp;
 use namespace::autoclean;
 
 extends 'Data::Couplet::Private';
-with('MooseX::Clone');
+with('MooseX::Clone', 'Data::Couplet::Plugin::KeyCount');
 
 =head1 ALPHA CODE
 
@@ -355,18 +355,6 @@ sub move_down {
 sub swap {
   my ( $self, $key_left, $key_right ) = @_;
   return $self;
-}
-
-=head3 ->count() : Int
-
-Number of items contained
-
-=cut
-
-sub count {
-  my ($self) = @_;
-
-  return scalar $self->keys;
 }
 
 no Moose;
