@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Support for multiple-value commands ( Thanks James Laver )
+          Support for ->count() mechanism     ( Thanks James Laver )
+
+0.02003813 2009-09-08 13:10:54 UTC
           Clone Support works and tested.
           Clones are MX::Cloned, and deep.
           minor++ # version scheme incompatible
