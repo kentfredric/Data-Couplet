@@ -138,9 +138,10 @@ Entries are ripped out of the structure, and all items moved around to fill the 
 
 sub unset {
   my ( $self, @objects ) = @_;
-  foreach my $object ( @objects ) {
-    return $self->unset_key( $self->_object_to_key($object) );
+  foreach my $object (@objects) {
+    $self->unset_key( $self->_object_to_key($object) );
   }
+  return $self;
 }
 
 =head3 ->unset_at( Array[Int] @indices ) : $self : Modifier
@@ -158,10 +159,11 @@ Should be identical to the above code.
 sub unset_at {
   my ( $self, @indices ) = @_;
   my $unset = 0;
-  foreach my $index ( @indices ) {
+  foreach my $index (@indices) {
     $self->unset_key( $self->key_at( $index - $unset ) );
     $unset++;
   }
+  return $self;
 }
 
 =head3 ->unset_key( Array[Str] @keys ) : $self : Modifier
@@ -175,9 +177,10 @@ method instead.
 
 sub unset_key {
   my ( $self, @keys ) = @_;
-  foreach my $key ( @keys ) {
+  foreach my $key (@keys) {
+
     #Skip any keys that aren't set
-    next unless ( exists $self->{_kv}->{$key} )
+    next unless ( exists $self->{_kv}->{$key} );
     my $index = $self->{_ki}->{$key};
     $self->_unset_at($index);
     $self->_unset_key($key);
@@ -361,9 +364,9 @@ Number of items contained
 =cut
 
 sub count {
-  my ( $self ) = @_;
-  
-  scalar $self->keys;
+  my ($self) = @_;
+
+  return scalar $self->keys;
 }
 
 no Moose;
