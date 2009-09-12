@@ -3,7 +3,7 @@ use warnings;
 
 package Data::Couplet::Plugin::KeyCount;
 
-# ABSTRACT: Provides a ->count method which indicates the number of keys
+# ABSTRACT: Provides various methods for seeing how many things are in the object
 
 use Moose::Role;
 
@@ -19,8 +19,20 @@ Number of items contained
 
 sub count {
   my ($self) = @_;
+  my @d = @{ $self->{_ik} };
+  return scalar @d;
+}
 
-  return scalar $self->keys;
+=head3 ->last_id() : Int
+
+Returns the last Id
+
+=cut
+
+sub last_id {
+  my ($self) = @_;
+  my @d = @{ $self->{_ik} };
+  return $#d;
 }
 
 no Moose::Role;

@@ -178,9 +178,23 @@ sub __all_str {
 sub unset_at {
   my ( $self, @indices ) = @_;
   __all_int(@indices);
+  @indices = sort { $a <=> $b } @indices;
+  @indices = grep {
+    $self->key_at($_) ? 1 : do {
+      Carp::carp("Warning: index $_ does not exist already");
+      0
+    }
+  } @indices;
   my $unset = 0;
   foreach my $index (@indices) {
-    $self->unset_key( $self->key_at( $index - $unset ) );
+    my $fake_index = ( $index - $unset );
+    my $key        = $self->key_at($fake_index);
+    if ( not defined $key ) {
+      Carp::carp("Cant delete index $index($fake_index), it has no key.");
+    }
+    else {
+      $self->unset_key($key);
+    }
     $unset++;
   }
   return $self;
