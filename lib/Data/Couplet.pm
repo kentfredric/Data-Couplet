@@ -353,6 +353,18 @@ sub swap {
   my ( $self, $key_left, $key_right ) = @_;
   return $self;
 }
+
+=head3 ->count() : Int
+
+Number of items contained
+
+=cut
+
+sub count {
+  my ( $self ) = @_;
+  
+  scalar $self->keys;
+}
 no Moose;
 __PACKAGE__->meta->make_immutable();
 1;
