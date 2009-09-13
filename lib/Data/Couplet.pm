@@ -362,6 +362,38 @@ sub key_object_at {
   return $self->{_ko}->{ $self->key_at($index) };
 }
 
+=head2 METHODS FROM PLUGINS
+
+By default, this package imports a few methods from various plug-ins.
+
+=over 4
+
+=item * L<Data::Couplet::Plugin::KeyCount>
+
+=over 4
+
+=item ->count
+
+=item ->last_id
+
+=back
+
+=item * L<Data::Couplet::Plugin::BasicReorder>
+
+=over 4
+
+=item ->move_up
+
+=item ->move_down
+
+=item ->swap
+
+=back
+
+=back
+
+=cut
+
 no Data::Couplet::Extension;
 __PACKAGE__->meta->make_immutable();
 1;
