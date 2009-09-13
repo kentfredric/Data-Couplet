@@ -1,5 +1,5 @@
 package Data::Couplet::Plugin::My::Plugin;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # $Id:$

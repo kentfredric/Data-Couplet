@@ -22,6 +22,7 @@ t/01_load.t
 t/02_standard_interface.t
 t/03_clone.t
 t/04_parallel_remove.t
+t/05_keyplugin.t
 t/author-critic.t
 t/author-kwalitee.t
 t/release-meta-yaml.t

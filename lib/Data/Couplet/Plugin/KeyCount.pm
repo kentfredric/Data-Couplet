@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet::Plugin::KeyCount;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # ABSTRACT: Provides various methods for seeing how many things are in the object
@@ -21,10 +21,16 @@ sub count {
 }
 
 
-sub last_id {
+sub last_index {
   my ($self) = @_;
   my @d = @{ $self->{_ik} };
   return $#d;
+}
+
+
+sub indices {
+  my ($self) = @_;
+  return ( 0 .. $self->last_index );
 }
 
 no Moose::Role;
@@ -42,7 +48,7 @@ Data::Couplet::Plugin::KeyCount - Provides various methods for seeing how many t
 
 =head1 VERSION
 
-version 0.02004302
+version 0.02004312
 
 =head3 ->count() : Int
 
@@ -50,9 +56,15 @@ Number of items contained
 
 
 
-=head3 ->last_id() : Int
+=head3 ->last_index() : Int
 
-Returns the last Id
+Returns the last index value
+
+
+
+=head3 ->indices() : Array[Int]
+
+Returns 0 .. ->last_index
 
 
 

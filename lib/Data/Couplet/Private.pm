@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet::Private;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # ABSTRACT: Private internal bits for Data::Couplet
@@ -146,7 +146,7 @@ Data::Couplet::Private - Private internal bits for Data::Couplet
 
 =head1 VERSION
 
-version 0.02004302
+version 0.02004312
 
 =head1 SYNOPSIS
 

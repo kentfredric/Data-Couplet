@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.02004302
+    version 0.02004312
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -150,7 +150,8 @@ METHODS
     *   Data::Couplet::Plugin::KeyCount
 
         ->count
-        ->last_id
+        ->last_index
+        ->indices
 
     *   Data::Couplet::Plugin::BasicReorder
 

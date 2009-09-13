@@ -2,7 +2,7 @@ use strict;
 use warnings FATAL => 'all';
 
 package Data::Couplet;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
@@ -195,7 +195,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02004302
+version 0.02004312
 
 =head1 ALPHA CODE
 
@@ -417,7 +417,9 @@ By default, this package imports a few methods from various plug-ins.
 
 =item ->count
 
-=item ->last_id
+=item ->last_index
+
+=item ->indices
 
 =back 
 

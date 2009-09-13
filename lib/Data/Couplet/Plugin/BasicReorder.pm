@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet::Plugin::BasicReorder;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # ABSTRACT: A D::C Plug-in to reorder data in your data set.
@@ -47,7 +47,7 @@ Data::Couplet::Plugin::BasicReorder - A D::C Plug-in to reorder data in your dat
 
 =head1 VERSION
 
-version 0.02004302
+version 0.02004312
 
 =head1 SYNOPSIS
 

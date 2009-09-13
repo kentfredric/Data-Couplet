@@ -7,7 +7,7 @@
       "version" : 1.4,
       "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
    },
-   "version" : "0.02004302",
+   "version" : "0.02004312",
    "name" : "Data-Couplet",
    "author" : [
       "Kent Fredric <kentnl at cpan.org>"
@@ -15,27 +15,27 @@
    "license" : "perl",
    "provides" : {
       "Data::Couplet::Role::Plugin" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet/Role/Plugin.pm"
       },
       "Data::Couplet::Private" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet/Private.pm"
       },
       "Data::Couplet::Extension" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet/Extension.pm"
       },
       "Data::Couplet" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet.pm"
       },
       "Data::Couplet::Plugin::KeyCount" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet/Plugin/KeyCount.pm"
       },
       "Data::Couplet::Plugin::BasicReorder" : {
-         "version" : "0.02004302",
+         "version" : "0.02004312",
          "file" : "lib/Data/Couplet/Plugin/BasicReorder.pm"
       }
    },

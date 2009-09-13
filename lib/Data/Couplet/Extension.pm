@@ -2,7 +2,7 @@ use strict;
 use warnings FATAL => 'all';
 
 package Data::Couplet::Extension;
-our $VERSION = '0.02004302';
+our $VERSION = '0.02004312';
 
 
 # ABSTRACT: A convenient way for sub classing Data::Couplet with minimal effort
@@ -112,7 +112,7 @@ Data::Couplet::Extension - A convenient way for sub classing Data::Couplet with 
 
 =head1 VERSION
 
-version 0.02004302
+version 0.02004312
 
 =head1 SYNOPSIS
 
