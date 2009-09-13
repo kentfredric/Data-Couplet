@@ -35,6 +35,17 @@ sub last_index {
   return $#d;
 }
 
+=head3 ->indices() : Array[Int]
+
+Returns 0 .. ->last_index
+
+=cut
+
+sub indices {
+  my ($self) = @_;
+  return ( 0 .. $self->last_index );
+}
+
 no Moose::Role;
 
 1;

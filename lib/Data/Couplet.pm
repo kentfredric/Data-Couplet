@@ -374,7 +374,9 @@ By default, this package imports a few methods from various plug-ins.
 
 =item ->count
 
-=item ->last_id
+=item ->last_index
+
+=item ->indices
 
 =back
 
