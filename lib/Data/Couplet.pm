@@ -5,15 +5,12 @@ package Data::Couplet;
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
 
-# $Id:$
-use Moose;
+use Data::Couplet::Extension -base => 'Private', -with => [qw( KeyCount BasicReorder )];
 use MooseX::Types::Moose qw( :all );
-use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
-extends 'Data::Couplet::Private';
-with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount', 'Data::Couplet::Plugin::BasicReorder' );
+with( 'MooseX::Clone', );
 
 =head1 ALPHA CODE
 
@@ -365,7 +362,7 @@ sub key_object_at {
   return $self->{_ko}->{ $self->key_at($index) };
 }
 
-no Moose;
+no Data::Couplet::Extension;
 __PACKAGE__->meta->make_immutable();
 1;
 
