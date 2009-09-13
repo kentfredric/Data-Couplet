@@ -23,13 +23,13 @@ sub count {
   return scalar @d;
 }
 
-=head3 ->last_id() : Int
+=head3 ->last_index() : Int
 
-Returns the last Id
+Returns the last index value
 
 =cut
 
-sub last_id {
+sub last_index {
   my ($self) = @_;
   my @d = @{ $self->{_ik} };
   return $#d;

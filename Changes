@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          Moved last_id to last_index ( was a bad name anyway )
+
+0.02004302 2009-09-13 02:06:26 UTC
           Added a Ease-Of-Use subclassing utility.
           Moved D::C core to the subclassing utility.
           Added subclassing example.
