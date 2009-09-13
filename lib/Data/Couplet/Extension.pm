@@ -3,39 +3,101 @@ use warnings FATAL => 'all';
 
 package Data::Couplet::Extension;
 
-# ABSTRACT: A Convenient way for SubClassing Data::Couplet with minimal effort
+# ABSTRACT: A convenient way for sub classing Data::Couplet with minimal effort
 
 use MooseX::Types::Moose qw( :all );
 use Carp;
 
+=head1 SYNOPSIS
+
+  package My::DC;
+  use Data::Couplet::Extension -with [qw( Plugin )];
+  __PACKAGE__->meta->make_immutable;
+  1;
+
+This provides a handy way to subclass L<Data::Couplet>, glue a bunch of DC plug-ins into it, and just use it.
+
+The alternative ways, while working, are likely largely suboptimal ( applying roles to instances, yuck );
+
+This gives you an easy way to create a sub class of L<Data::Couplet>, and possibly tack on some of your own
+methods directly.
+
+=cut
+
 sub _dump {
+  my (@args) = @_;
   require Data::Dumper;
   local $Data::Dumper::Terse     = 1;
   local $Data::Dumper::Indent    = 0;
   local $Data::Dumper::Maxdepth  = 1;
   local $Data::Dumper::Quotekeys = 0;
-  return Data::Dumper::Dumper(@_);
+  return Data::Dumper::Dumper(@args);
 }
 
 sub _carp_key {
-  my $key     = shift;
-  my $config  = shift;
-  my $message = shift;
-  carp( $key . ' => ' . _dump( $config->{$key} ) . ' ' . $message );
+  my ( $key, $config, $message ) = @_;
+  carp( sprintf '%s => %s %s', $key, _dump( $config->{$key} ), $message );
   return;
 }
 
 sub _croak_key {
-  my $key     = shift;
-  my $config  = shift;
-  my $message = shift;
-  croak( $key . ' => ' . _dump( $config->{$key} ) . ' ' . $message );
-  return;
+  my ( $key, $config, $message ) = @_;
+  croak( sprintf '%s => %s %s', $key, _dump( $config->{$key} ), $message );
 }
 
+=head1 METHODS
+
+=head2 import
+
+Makes the calling package a Data::Couplet subclass.
+
+  Data::Couplet::Extension->import(
+    -into => ( $target || caller ),
+    -base => ( $name   || ''     ),
+    -with => ( [qw( PluginA PluginB )] || [] ),
+  );
+
+=head3 -into => $target
+
+This is a convenience parameter, to make it easier to do via a 3rd party.
+
+If not set, its automatically set to C<scalar caller()>;
+
+=head3 -base => $name
+
+
+This is also mostly a convenience parameter, at this time, the only reason you'd want to set
+this to something, would be if you wanted to extend the L<Data::Couplet::Private> core, and that's
+recommended only for experts who don't like our interface.
+
+Incidentally, we use this to make Data::Couplet.
+
+=head3 -base_package => $name
+
+You can't set this yourself, we overwrite it, but this documentation is here to clarify how it works.
+
+This is the expansion of C<-base>. '' becomes 'Data::Couplet' ( which is the default ) and all other values
+become  'Data::Couplet::' . $value;
+
+This is then used via L<Moose> C<extends> to define your packages base class.
+
+=head3 -with => [qw( name )]
+
+This one you probably want the most. Its semantically the same as Moose's C<with>, except that for convenience, all values of C<name> are expanded to C<Data::Couplet::name> and various tests are done on them to make sure they are compatible.
+
+You can leave this empty, but you're not maximising the point of this utility unless you fill it.
+
+=head3 -with_expanded => [qw( name )]
+
+You can't set this, we overwrite it. It gets  populated from C<-with> by simple expansion, C<Data::Couplet::Plugin::$value>.
+
+These are fed to Moose's C<with> method on your package
+
+=cut
+
 sub import {
-  my $class  = shift;
-  my %config = @_;
+  my ( $class, @args ) = @_;
+  my (%config) = (@args);
   my $caller = caller;
 
   require Moose;
@@ -51,21 +113,21 @@ sub import {
     return;
   }
 
-  $config{-base} = '' unless exists $config{-base};
+  $config{-base} = q{} unless exists $config{-base};
 
   _croak_key( -base => \%config, 'is not a Str' ) unless is_Str( $config{-base} );
 
-  $config{-basepackage} = 'Data::Couplet';
-  if ( $config{-base} ne '' ) {
-    $config{-basepackage} = 'Data::Couplet::' . $config{-base};
+  $config{-base_package} = 'Data::Couplet';
+  if ( $config{-base} ne q{} ) {
+    $config{-base_package} = 'Data::Couplet::' . $config{-base};
   }
 
-  if ( $config{-basepackage} eq 'Data::Couplet' ) {
+  if ( $config{-base_package} eq 'Data::Couplet' ) {
     require Data::Couplet;
   }
 
-  _croak_key( -basepackage => \%config, 'is not a valid ClassName' )
-    unless is_ClassName( $config{-basepackage} );
+  _croak_key( -base_package => \%config, 'is not a valid ClassName' )
+    unless is_ClassName( $config{-base_package} );
 
   $config{-with} = [] unless exists $config{-with};
   $config{-with_expanded} = [];
@@ -86,10 +148,18 @@ sub import {
   strict->import();
   warnings->import();
   Moose->import( { into => $config{-into}, } );
-  $config{-into}->can('extends')->( $config{-basepackage} );
+  $config{-into}->can('extends')->( $config{-base_package} );
   $config{-into}->can('with')->( @{ $config{-with_expanded} } );
-
+  return;
 }
+
+=head2 unimport
+
+Seeing the only things we import come from Moose anyway, this is just
+
+  goto \&Moose::unimport;
+
+=cut
 
 sub unimport {
 
