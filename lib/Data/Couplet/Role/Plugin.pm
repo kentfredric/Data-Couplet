@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet::Role::Plugin;
-our $VERSION = '0.02004222';
+our $VERSION = '0.02004302';
 
 
 # ABSTRACT: A Generalised Role for classes to extend Data::Couplet via aggregation.
@@ -26,7 +26,7 @@ Data::Couplet::Role::Plugin - A Generalised Role for classes to extend Data::Cou
 
 =head1 VERSION
 
-version 0.02004222
+version 0.02004302
 
 =head1 SYNOPSIS
 

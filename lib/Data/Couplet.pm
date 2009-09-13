@@ -2,20 +2,17 @@ use strict;
 use warnings FATAL => 'all';
 
 package Data::Couplet;
-our $VERSION = '0.02004222';
+our $VERSION = '0.02004302';
 
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
 
-# $Id:$
-use Moose;
+use Data::Couplet::Extension -base => 'Private', -with => [qw( KeyCount BasicReorder )];
 use MooseX::Types::Moose qw( :all );
-use Data::Couplet::Private ();
 use Carp;
 use namespace::autoclean;
 
-extends 'Data::Couplet::Private';
-with( 'MooseX::Clone', 'Data::Couplet::Plugin::KeyCount', 'Data::Couplet::Plugin::BasicReorder' );
+with( 'MooseX::Clone', );
 
 
 
@@ -182,7 +179,8 @@ sub key_object_at {
   return $self->{_ko}->{ $self->key_at($index) };
 }
 
-no Moose;
+
+no Data::Couplet::Extension;
 __PACKAGE__->meta->make_immutable();
 1;
 
@@ -197,7 +195,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02004222
+version 0.02004302
 
 =head1 ALPHA CODE
 
@@ -404,6 +402,38 @@ asked us for our internal key name.
 
 As with key_object, except partially useful, because you can fetch
 by ID.
+
+
+
+=head2 METHODS FROM PLUGINS
+
+By default, this package imports a few methods from various plug-ins.
+
+=over 4
+
+=item * L<Data::Couplet::Plugin::KeyCount>
+
+=over 4
+
+=item ->count
+
+=item ->last_id
+
+=back 
+
+=item * L<Data::Couplet::Plugin::BasicReorder>
+
+=over 4
+
+=item ->move_up
+
+=item ->move_down
+
+=item ->swap
+
+=back 
+
+=back 
 
 
 

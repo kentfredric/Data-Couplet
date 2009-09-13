@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.02004222
+    version 0.02004302
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -143,6 +143,20 @@ METHODS
    ->key_object_at( Int $index ) : Any $object
     As with key_object, except partially useful, because you can fetch by
     ID.
+
+  METHODS FROM PLUGINS
+    By default, this package imports a few methods from various plug-ins.
+
+    *   Data::Couplet::Plugin::KeyCount
+
+        ->count
+        ->last_id
+
+    *   Data::Couplet::Plugin::BasicReorder
+
+        ->move_up
+        ->move_down
+        ->swap
 
 AUTHOR
       Kent Fredric <kentnl at cpan.org>

@@ -11,19 +11,22 @@ name: Data-Couplet
 provides:
   Data::Couplet:
     file: lib/Data/Couplet.pm
-    version: 0.02004222
+    version: 0.02004302
+  Data::Couplet::Extension:
+    file: lib/Data/Couplet/Extension.pm
+    version: 0.02004302
   Data::Couplet::Plugin::BasicReorder:
     file: lib/Data/Couplet/Plugin/BasicReorder.pm
-    version: 0.02004222
+    version: 0.02004302
   Data::Couplet::Plugin::KeyCount:
     file: lib/Data/Couplet/Plugin/KeyCount.pm
-    version: 0.02004222
+    version: 0.02004302
   Data::Couplet::Private:
     file: lib/Data/Couplet/Private.pm
-    version: 0.02004222
+    version: 0.02004302
   Data::Couplet::Role::Plugin:
     file: lib/Data/Couplet/Role/Plugin.pm
-    version: 0.02004222
+    version: 0.02004302
 requires:
   Carp: 0
   Data::Dump: 0
@@ -37,4 +40,4 @@ requires:
   namespace::autoclean: 0
 resources:
   repository: git://github.com/kentfredric/Data-Couplet.git
-version: 0.02004222
+version: 0.02004302

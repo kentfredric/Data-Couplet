@@ -1,5 +1,10 @@
 Revision history for Data-Couplet
 
+0.02004302 2009-09-13 02:06:26 UTC
+          Added a Ease-Of-Use subclassing utility.
+          Moved D::C core to the subclassing utility.
+          Added subclassing example.
+
 0.02004222 2009-09-12 22:23:22 UTC
           Added a plugin infrastructure w/ Roles.
           Moved ->count to role composition ( you wont notice this )

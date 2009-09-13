@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package Data::Couplet::Plugin::KeyCount;
-our $VERSION = '0.02004222';
+our $VERSION = '0.02004302';
 
 
 # ABSTRACT: Provides various methods for seeing how many things are in the object
@@ -42,7 +42,7 @@ Data::Couplet::Plugin::KeyCount - Provides various methods for seeing how many t
 
 =head1 VERSION
 
-version 0.02004222
+version 0.02004302
 
 =head3 ->count() : Int
 

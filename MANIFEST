@@ -7,7 +7,11 @@ META.yml
 Makefile.PL
 README
 dist.ini
+examples/subclass/example.pl
+examples/subclass/lib/Data/Couplet/Plugin/My/Plugin.pm
+examples/subclass/lib/My/DataCouplet.pm
 lib/Data/Couplet.pm
+lib/Data/Couplet/Extension.pm
 lib/Data/Couplet/Plugin/BasicReorder.pm
 lib/Data/Couplet/Plugin/KeyCount.pm
 lib/Data/Couplet/Private.pm
