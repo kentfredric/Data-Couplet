@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           Moved last_id to last_index ( was a bad name anyway )
           Added ->indices to the KeyCount plug. 
+          Added KeyPlug tests.
 
 0.02004302 2009-09-13 02:06:26 UTC
           Added a Ease-Of-Use subclassing utility.
