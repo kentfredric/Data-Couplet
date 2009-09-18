@@ -6,9 +6,8 @@ package Data::Couplet::Private;
 # ABSTRACT: Private internal bits for Data::Couplet
 
 # $Id:$
-use Moose;
+use Moose 0.90;
 use MooseX::Types::Moose qw( :all );
-use MooseX::Has::Sugar qw( rw );
 use Carp;
 use namespace::autoclean;
 with('MooseX::Clone');
@@ -60,7 +59,26 @@ has string overload, the overloaded value will be used in the index.
 
 =cut
 
-has '_ko' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
+has '_ko' => (
+  isa     => HashRef,
+  is      => 'rw',
+  default => sub { +{} },
+  traits  => [qw( Clone Hash )],
+  handles => {
+    _ko_get      => 'get',
+    _ko_set      => 'set',
+    _ko_delete   => 'delete',
+    _ko_keys     => 'keys',
+    _ko_exists   => 'exists',
+    _ko_defined  => 'defined',
+    _ko_values   => 'values',
+    _ko_kv       => 'kv',
+    _ko_elements => 'elements',
+    _ko_clear    => 'clear',
+    _ko_count    => 'count',
+    _ko_is_empty => 'is_empty',
+  },
+);
 
 =head2 _kv : rw HashRef
 
@@ -73,7 +91,26 @@ what you would get with a normal hash.
 
 =cut
 
-has '_kv' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
+has '_kv' => (
+  isa     => HashRef,
+  is      => 'rw',
+  default => sub { +{} },
+  traits  => [qw( Clone Hash )],
+  handles => {
+    _kv_get      => 'get',
+    _kv_set      => 'set',
+    _kv_delete   => 'delete',
+    _kv_keys     => 'keys',
+    _kv_exists   => 'exists',
+    _kv_defined  => 'defined',
+    _kv_values   => 'values',
+    _kv_kv       => 'kv',
+    _kv_elements => 'elements',
+    _kv_clear    => 'clear',
+    _kv_count    => 'count',
+    _kv_is_empty => 'is_empty',
+  },
+);
 
 =head2 _ki : rw HashRef
 
@@ -87,7 +124,26 @@ much easier, increment values :)
 
 =cut
 
-has '_ki' => ( isa => HashRef, rw, default => sub { +{} }, traits => [qw( Clone )] );
+has '_ki' => (
+  isa     => HashRef,
+  is      => 'rw',
+  default => sub { +{} },
+  traits  => [qw( Clone Hash)],
+  handles => {
+    _ki_get      => 'get',
+    _ki_set      => 'set',
+    _ki_delete   => 'delete',
+    _ki_keys     => 'keys',
+    _ki_exists   => 'exists',
+    _ki_defined  => 'defined',
+    _ki_values   => 'values',
+    _ki_kv       => 'kv',
+    _ki_elements => 'elements',
+    _ki_clear    => 'clear',
+    _ki_count    => 'count',
+    _ki_is_empty => 'is_empty',
+  },
+);
 
 =head2 _ik : rw ArrayRef
 
@@ -97,7 +153,36 @@ This keeps our keys in order
 
 =cut
 
-has '_ik' => ( isa => ArrayRef, rw, default => sub { [] }, traits => [qw( Clone )] );
+has '_ik' => (
+  isa     => ArrayRef,
+  is      => 'rw',
+  default => sub { [] },
+  traits  => [qw( Clone Array )],
+  handles => {
+    _ik_count         => 'count',
+    _ik_is_empty      => 'is_empty',
+    _ik_elements      => 'elements',
+    _ik_get           => 'get',
+    _ik_pop           => 'pop',
+    _ik_push          => 'push',
+    _ik_shift         => 'shift',
+    _ik_unshift       => 'unshift',
+    _ik_splice        => 'splice',
+    _ik_first         => 'first',
+    _ik_grep          => 'grep',
+    _ik_map           => 'map',
+    _ik_reduce        => 'reduce',
+    _ik_sort          => 'sort',
+    _ik_sort_in_place => 'sort_in_place',
+    _ik_shuffle       => 'shuffle',
+    _ik_uniq          => 'uniq',
+    _ik_join          => 'join',
+    _ik_set           => 'set',
+    _ik_delete        => 'delete',
+    _ik_insert        => 'insert',
+    _ik_clear         => 'clear',
+  },
+);
 
 =head1 METHODS
 
@@ -127,7 +212,7 @@ sub _object_to_key {
 
 sub _unset_at {
   my ( $self, $index ) = @_;
-  splice @{ $self->{_ik} }, $index, 1;
+  $self->_ik_splice( $index, 1, () );
   return $self;
 }
 
@@ -141,13 +226,13 @@ sub _unset_key {
   my ( $self, $key ) = @_;
 
   # Forget Where
-  delete $self->{_ki}->{$key};
+  $self->_ki_delete($key);
 
   # Forget What it is
-  delete $self->{_ko}->{$key};
+  $self->_ko_delete($key);
 
   # Forget what it means
-  delete $self->{_kv}->{$key};
+  $self->_kv_delete($key);
 
   return $self;
 }
@@ -164,7 +249,8 @@ sub _unset_key {
 sub _move_key_range {
   my ( $self, $start, $stop, $amt ) = @_;
   for ( $start .. $stop ) {
-    $self->{_ki}->{ $self->{_ik}->[$_] } += $amt;
+    my $indexk = $self->_ik_get($_);
+    $self->_ki_set( $indexk, $self->_ki_get($indexk) + $amt );
   }
   return $self;
 }
@@ -178,10 +264,11 @@ or by creating it. Returns where the key is.
 
 sub _index_key {
   my ( $self, $key ) = @_;
-  if ( exists $self->{_ki}->{$key} ) {
-    return $self->{_ki}->{$key};
+  if ( $self->_ki_exists($key) ) {
+    return $self->_ki_get($key);
   }
-  my $index = ( push @{ $self->{_ik} }, $key ) - 1;
+  my $index = ( $self->_ik_push($key) - 1 );
+  $self->_ki_set( $key, $index );
   return $index;
 }
 
@@ -207,9 +294,9 @@ Handles the part of assigning all the Key => Value association needed in many pa
 
 sub _set_kiov {
   my ( $self, $k, $i, $o, $v ) = @_;
-  $self->{_ki}->{$k} = $i;
-  $self->{_ko}->{$k} = $o;
-  $self->{_kv}->{$k} = $v;
+  $self->_ki_set( $k, $i );
+  $self->_ko_set( $k, $o );
+  $self->_kv_set( $k, $v );
   return $self;
 }
 
@@ -222,10 +309,10 @@ _ki from _ik
 
 sub _sync_ki {
   my ($self) = @_;
-  $self->{_ki} = {};
+  $self->_ki_clear();
   my $i = 0;
-  for ( @{ $self->{_ik} } ) {
-    $self->{_ki}->{$_} = $i;
+  for ( $self->_ik_elements ) {
+    $self->_ki_set( $_, $i );
     $i++;
   }
   return $self;
@@ -240,19 +327,19 @@ rebuild _ik from _ki
 
 sub _sync_ik {
   my ($self) = @_;
-  my @p = %{ $self->{_ki} };
-  $self->{_ik} = [];
-  $self->{_ki} = {};
-  my @pp;
-  while (@p) {
-    push @pp, [ shift @p, shift @p ];
-  }
+
+  my @pp = $self->_ki_kv;
+
+  $self->_ik_clear();
+  $self->_ki_clear();
+
+  # Sort by values, that is, their indices.
+
   @pp = sort { $a->[1] <=> $b->[1] } @pp;
+
   while (@pp) {
-    my $kv    = shift @pp;
-    my $key   = $kv->[0];
-    my $index = ( push @{ $self->{_ik} }, $key ) - 1;
-    $self->{_ki}->{$key} = $index;
+    my $kv = shift @pp;
+    $self->_index_key( $kv->[0] );
   }
   return $self;
 }
