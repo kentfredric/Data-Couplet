@@ -97,7 +97,7 @@ sub BUILDARGS {
 
 =cut
 
-=head3 ->set( Any $object, Any  $value ) : $self : Modifier
+=head3 ->set( Any $object, Any  $value , ...., ...., $object, $value) : $self : Modifier
 
 Record the association of a key ( any object that can be coerced into a string )  to a value.
 
@@ -113,8 +113,11 @@ New entries are pushed on the logical right hand end of it in array context.
 =cut
 
 sub set {
-  my ( $self, $object, $value ) = @_;
+  my ( $self, $object, $value, @rest ) = @_;
   $self->_set( $object, $value );
+  if (@rest) {
+    $self->set(@rest);
+  }
   return $self;
 }
 
