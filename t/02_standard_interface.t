@@ -2,6 +2,8 @@ use strict;
 use warnings;
 
 use Test::More;
+use FindBin;
+use Package::Strictures -from => "$FindBin::Bin/../strictures.ini";
 use Data::Couplet;
 use Data::Dump qw( dump );
 

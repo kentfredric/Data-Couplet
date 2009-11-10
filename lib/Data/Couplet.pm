@@ -8,8 +8,13 @@ package Data::Couplet;
 use Data::Couplet::Extension -base => 'Private', -with => [qw( KeyCount BasicReorder )];
 use MooseX::Types::Moose qw( :all );
 use Carp;
+use Package::Strictures::Register -setup => {
+  -strictures => {
+    WARN_FATAL => { default => '' },
+    WARN       => { default => '' },
+  },
+};
 use namespace::autoclean;
-
 with( 'MooseX::Clone', );
 
 =head1 ALPHA CODE
@@ -215,11 +220,17 @@ sub unset_key {
   foreach my $key (@keys) {
 
     #Skip any keys that aren't set
-    next unless ( exists $self->{_kv}->{$key} );
-    my $index = $self->{_ki}->{$key};
+    next unless ( $self->_kv_exists($key) );
+
+    my $index = $self->_ki_get($key);
+
+    # This is important to be done first,
+    # as it needs i->k which is corroded by
+    # unset_at
+
+    $self->_move_key_range( $index, $self->_ik_last, 0 - 1 );
     $self->_unset_at($index);
     $self->_unset_key($key);
-    $self->_move_key_range( $index, $#{ $self->{_ik} }, 0 - 1 );
   }
   return $self;
 }

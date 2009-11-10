@@ -102,6 +102,7 @@ sub import {
 
   require Moose;
   require Data::Couplet::Private;
+
   require Data::Couplet::Role::Plugin;
 
   $config{-into} = $caller unless exists $config{-into};
@@ -149,7 +150,9 @@ sub import {
   warnings->import();
   Moose->import( { into => $config{-into}, } );
   $config{-into}->can('extends')->( $config{-base_package} );
-  $config{-into}->can('with')->( @{ $config{-with_expanded} } );
+  if ( scalar @{ $config{-with_expanded} } ) {
+    $config{-into}->can('with')->( @{ $config{-with_expanded} } );
+  }
   return;
 }
 

@@ -1,6 +1,17 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ [Dependencies]
+ - new: runtime requires Package::Strictures
+
+ [Features]
+ - Fixed ::Extension so that you can omit -with.
+
+ [Internals]
+ - Fixed order-of-operations in Data::Couplet::unset_key.
+
+ [Tests]
+ - Enhanced Checking of things.
 
 0.02004314 2011-10-28T14:54:15Z
  [Dependencies]

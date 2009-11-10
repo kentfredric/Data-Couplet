@@ -10,6 +10,13 @@ use Moose 0.90;
 use MooseX::Types::Moose qw( :all );
 use Carp;
 use namespace::autoclean;
+use Package::Strictures::Register -setup => {
+  -strictures => {
+    STRICT     => { default => '' },    # Don't do direct access, use accessors
+    WARN_FATAL => { default => '' },    # Extra checks == fatal.
+    WARN       => { default => '' },    # Extra checks == warn.
+  },
+};
 with('MooseX::Clone');
 
 =head1 SYNOPSIS
@@ -197,8 +204,9 @@ has '_ik' => (
 sub _object_to_key {
   my ( $self, $object ) = @_;
   my $key;
-  if ( not defined $object ) {
-    Carp::croak('Cant Stringify Undef for use as a key.');
+  if ( ( WARN_FATAL or WARN ) and not defined $object ) {
+    Carp::confess('Cant Stringify Undef for use as a key.') if WARN_FATAL;
+    Carp::cluck('Cant Stringify Undef for use as a key.')   if WARN;
   }
   $key = "$object";
   return $key;
@@ -208,10 +216,18 @@ sub _object_to_key {
 
  Deletes things that are found using an index only.
 
+ Note this only modifies i->k.
+
+ For modifying the corresponding k->i map you need _move_key_range
+
 =cut
 
 sub _unset_at {
   my ( $self, $index ) = @_;
+  if ( ( WARN_FATAL or WARN ) and not $index < $self->_ik_count ) {
+    Carp::confess("Index $index does not exist") if WARN_FATAL;
+    Carp::cluck("Index $index does not exist")   if WARN;
+  }
   $self->_ik_splice( $index, 1, () );
   return $self;
 }
@@ -224,6 +240,20 @@ sub _unset_at {
 
 sub _unset_key {
   my ( $self, $key ) = @_;
+  if ( WARN_FATAL or WARN ) {
+    if ( not $self->_ki_exists($key) ) {
+      Carp::confess("Key '$key' not in key<->index map") if WARN_FATAL;
+      Carp::cluck("Key '$key' not in key<->index map")   if WARN;
+    }
+    if ( not $self->_ko_exists($key) ) {
+      Carp::confess("Key '$key' not in key<->object map") if WARN_FATAL;
+      Carp::cluck("Key '$key' not in key<->object map")   if WARN;
+    }
+    if ( not $self->_kv_exists($key) ) {
+      Carp::confess("Key '$key' not in key<->value map") if WARN_FATAL;
+      Carp::cluck("Key '$key' not in key<->value map")   if WARN;
+    }
+  }
 
   # Forget Where
   $self->_ki_delete($key);
@@ -239,17 +269,41 @@ sub _unset_key {
 
 =head2 ->_move_key_range( Int $left , Int $right , Int $jump ) : $self : Modifier
 
- Move a set of keys in the hash
- by $amt in $sign direction
- ->_move_key_range( $start, $stop , -1 ); # move left
- ->_move_key_range( $start, $stop , +1 ); # move right
+Move a set of keys in the hash
+by $amt in $sign direction
+
+  ->_move_key_range( $start, $stop , -1 ); # move left
+  ->_move_key_range( $start, $stop , +1 ); # move right
+
+Note this only modifies the k->i map. Modifying i->k is done seperately.
 
 =cut
 
 sub _move_key_range {
   my ( $self, $start, $stop, $amt ) = @_;
+  if ( WARN_FATAL or WARN ) {
+    my $last = $self->_ik_last;
+    if ( $start > $last ) {
+      Carp::confess("Starting offset outside index<->key range ( $start > $last )") if WARN_FATAL;
+      Carp::cluck("Starting offset outside index<->key range ( $start > $last )")   if WARN;
+    }
+    if ( $stop > $last ) {
+      Carp::confess("Stopping offset outside index<->key range ( $start > $last )") if WARN_FATAL;
+      Carp::cluck("Stopping offset outside index<->key range ( $start > $last )")   if WARN;
+    }
+  }
   for ( $start .. $stop ) {
+
+    # find key for index
     my $indexk = $self->_ik_get($_);
+    if ( WARN_FATAL or WARN ) {
+      if ( not $self->_ki_exists($indexk) ) {
+        Carp::confess("Key $indexk is not in key<->index, but in index<->key ($_)") if WARN_FATAL;
+        Carp::cluck("Key $indexk is not in key<->index, but in index<->key ($_)")   if WARN;
+      }
+    }
+
+    # update key with its previous value plus $amt
     $self->_ki_set( $indexk, $self->_ki_get($indexk) + $amt );
   }
   return $self;
@@ -264,12 +318,33 @@ or by creating it. Returns where the key is.
 
 sub _index_key {
   my ( $self, $key ) = @_;
-  if ( $self->_ki_exists($key) ) {
-    return $self->_ki_get($key);
+  if (STRICT) {
+    if ( $self->_ki_exists($key) ) {
+      return $self->_ki_get($key);
+    }
+    my $index = ( $self->_ik_push($key) - 1 );
+    $self->_ki_set( $key, $index );
+    return $index;
   }
-  my $index = ( $self->_ik_push($key) - 1 );
-  $self->_ki_set( $key, $index );
-  return $index;
+  else {
+    if ( exists $self->{_ki}->{$key} ) {
+      return $self->{_ki}->{$key};
+    }
+    my $index = ( ( push @{ $self->{_ik} }, $key ) - 1 );
+    $self->{_ki}->{$key} = $index;
+    return $index;
+
+  }
+}
+
+sub _ik_last {
+  my ($self) = @_;
+  return $self->_ik_count - 1;
+}
+
+sub _ik_exists {
+  my ( $self, $i ) = @_;
+  return $i < $self->_ik_count;
 }
 
 =head2 ->_set ( Any $object , Any $value ) : $self : Modifier
@@ -282,6 +357,10 @@ can call this.
 sub _set {
   my ( $self, $object, $value ) = @_;
   my $key = $self->_object_to_key($object);
+  if ( ( WARN_FATAL or WARN ) and not defined $key ) {
+    Carp::confess("_object_to_key returned undef.") if WARN_FATAL;
+    Carp::cluck("_object_to_key returned undef.")   if WARN;
+  }
   $self->_set_kiov( $key, $self->_index_key($key), $object, $value );
   return $self;
 }
@@ -294,10 +373,22 @@ Handles the part of assigning all the Key => Value association needed in many pa
 
 sub _set_kiov {
   my ( $self, $k, $i, $o, $v ) = @_;
-  $self->_ki_set( $k, $i );
-  $self->_ko_set( $k, $o );
-  $self->_kv_set( $k, $v );
-  return $self;
+  if ( ( WARN_FATAL or WARN ) and not defined $k ) {
+    Carp::confess("undef key passed to _set_kiov. value => $v") if WARN_FATAL;
+    Carp::cluck("undef key passed to _set_kiov, value => $v")   if WARN;
+  }
+  if (STRICT) {
+    $self->_ki_set( $k, $i );
+    $self->_ko_set( $k, $o );
+    $self->_kv_set( $k, $v );
+    return $self;
+  }
+  else {
+    $self->{_ki}->{$k} = $i;
+    $self->{_ko}->{$k} = $o;
+    $self->{_kv}->{$k} = $v;
+    return $self;
+  }
 }
 
 =head2 ->_sync_ki : $self : Modifier
