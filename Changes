@@ -16,6 +16,8 @@ Revision history for {{$dist->name}}
  - dependencies now properly qualified.
  - now ship x_authority.
  - Pod overhaulled and rewoven.
+ - Ship .perltidyrc
+ - Tidy all code.
 
  [Dependencies::Removed]
  - Test::use::ok
