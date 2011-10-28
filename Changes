@@ -2,7 +2,18 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
  - Maintenance release, no non-packaging changes in this release.
-  
+
+ [Dependencies::New]
+ - Data::Dumper
+
+ [Dependencies::Removed]
+ - Test::use::ok
+ - ok
+
+ [Internals]
+ - packages now set $VERSION without 'our'
+ - packages now have $AUTHORITY
+
  [Packaging]
  - Much needed regeneration of Build.PL
  - Changes file migrated to CPAN::Changes format.
@@ -19,17 +30,6 @@ Revision history for {{$dist->name}}
  - Ship .perltidyrc
  - Tidy all code.
 
- [Dependencies::Removed]
- - Test::use::ok
- - ok
-
- [Dependencies::New]
- - Data::Dumper
-
- [Internals]
- - packages now set $VERSION without 'our'
- - packages now have $AUTHORITY
-
  [Tests]
  - added version reporting test.
  - t/* moved to xt/*
@@ -40,7 +40,6 @@ Revision history for {{$dist->name}}
  - xt:added release/kwalitee
  - xt:added release/pod-coverage
  - xt:added release/pod-syntax
-
 
 0.02004312 2009-09-13T12:20:00Z
  - Moved last_id to last_index ( was a bad name anyway )
