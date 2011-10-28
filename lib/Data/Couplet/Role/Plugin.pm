@@ -2,8 +2,12 @@ use strict;
 use warnings;
 
 package Data::Couplet::Role::Plugin;
-our $VERSION = '0.02004312';
-
+BEGIN {
+  $Data::Couplet::Role::Plugin::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Data::Couplet::Role::Plugin::VERSION = '0.02004313';
+}
 
 # ABSTRACT: A Generalised Role for classes to extend Data::Couplet via aggregation.
 
@@ -17,7 +21,6 @@ no Moose::Role;
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -26,7 +29,7 @@ Data::Couplet::Role::Plugin - A Generalised Role for classes to extend Data::Cou
 
 =head1 VERSION
 
-version 0.02004312
+version 0.02004313
 
 =head1 SYNOPSIS
 
@@ -69,19 +72,16 @@ Then later
 
   ... etc ...
 
-
-
 =head1 AUTHOR
 
-  Kent Fredric <kentnl at cpan.org>
+Kent Fredric <kentnl at cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Kent Fredric.
+This software is copyright (c) 2011 by Kent Fredric.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

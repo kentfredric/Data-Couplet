@@ -2,8 +2,12 @@ use strict;
 use warnings FATAL => 'all';
 
 package Data::Couplet;
-our $VERSION = '0.02004312';
-
+BEGIN {
+  $Data::Couplet::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Data::Couplet::VERSION = '0.02004313';
+}
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
 
@@ -186,7 +190,6 @@ __PACKAGE__->meta->make_immutable();
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -195,15 +198,27 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02004312
+version 0.02004313
+
+=head1 SYNOPSIS
+
+  use Data::Couplet;
+
+  # Retain order.
+  my $couplet = Data::Couplet->new(   a => $b , c => $d );
+
+  my $output = $couplet->value('a');  # returns $b;
+
+  my $hash = { 'this is a' => 'key' };
+
+  $couplet->set( $hash, "hello");
+  $couplet->value( $hash ); # hello
 
 =head1 ALPHA CODE
 
 Lots of stuff is probably still broken, unimplemented, untested.
 
 User beware
-
-
 
 =head1 DIFFERENT
 
@@ -224,7 +239,7 @@ I want it to be possible, to retain arbitrary references used as keys.
 
 Its not here yet, but there I<Will> eventually be reordering functions.
 
-=back 
+=back
 
 I seriously looked all over CPAN for something that suited my needs and didn't find any.
 
@@ -232,27 +247,7 @@ I then tried with Tie::IxHash::ButMoreFun, and then discovered that how I was
 using Tie::IxHash wasn't even sustainable on different versions of Perl, and
 based on the 1997 release date, I gave up on seeing that fixed.
 
-
-
-=head1 SYNOPSIS
-
-  use Data::Couplet;
-
-  # Retain order.
-  my $couplet = Data::Couplet->new(   a => $b , c => $d );
-
-  my $output = $couplet->value('a');  # returns $b;
-
-  my $hash = { 'this is a' => 'key' };
-
-  $couplet->set( $hash, "hello");
-  $couplet->value( $hash ); # hello
-
-
-
 =head1 METHODS
-
-
 
 =head2 CONSTRUCTOR
 
@@ -262,11 +257,7 @@ Create a new Data::Couplet entity using a series of ordered pairs.
 
   $c = Data::Couplet->new( 'a' => 'b', 'c' => 'd' );
 
-
-
 =head2 ENTRY CREATION
-
-
 
 =head3 ->set( Any $object, Any  $value ) : $self : Modifier
 
@@ -280,12 +271,7 @@ New entries are pushed on the logical right hand end of it in array context.
   set('e', 'a' );
   # { 'a' => 'e', 'c' => 'd', 'e' => 'a' }
 
-
-
-
 =head2 ENTRY REMOVAL
-
-
 
 =head3 ->unset( Array[Any] @objects ) : $self : Modifier
 
@@ -297,8 +283,6 @@ Entries are ripped out of the structure, and all items moved around to fill the 
   ->unset('a');
   # { 'e' => 'f' }
 
-
-
 =head3 ->unset_at( Array[Int] @indices ) : $self : Modifier
 
 Like ->unset, except you know where ( logically ) in the order
@@ -309,8 +293,6 @@ off things the entry you wish to delete is.
 
 Should be identical to the above code.
 
-
-
 =head3 ->unset_key( Array[Str] @keys ) : $self : Modifier
 
 This is what ->unset ultimately calls, except ->unset does implicit
@@ -318,36 +300,24 @@ object_to_key conversion first. At present, that's not anything huge, its just
 C<$object> to convert it to a string. But this may change at some future time. So use that
 method instead.
 
-
-
 =head2 VALUE MANIPULATION
-
-
 
 =head3 ->value( Any $object ) : Any $value
 
 Returns a value associated with a key object. See L</unset> for the semantics
 of what object keys are.
 
-
-
 =head3 ->value_at( Int $index ) : Any $value
 
 Like value, but you need to know where in the data set the item is.
-
-
 
 =head3 ->values() : Any @list
 
 returns an array of all stored values in order.
 
-
-
 =head3 ->values_ref() : ArrayRef[Any] $list
 
 Just some nice syntax for [$o->values]
-
-
 
 =head3 ->key_values() : Any @list
 
@@ -361,8 +331,6 @@ to the constructor.
     print "$key => $value\n"
   }
 
-
-
 =head3 ->key_values_paired() : Any[ArrayRef] @list
 
 Returns like ->key_values does but key/value is grouped for your convenience
@@ -371,23 +339,15 @@ Returns like ->key_values does but key/value is grouped for your convenience
     my ( $key, $value ) = @{ $_ };
   }
 
-
-
 =head2 KEY MANIPULATION
-
-
 
 =head3 ->keys() : @list
 
 returns all known keys in order
 
-
-
 =head3 ->key_at( Int $index ) : String
 
 Given an index, return the key that holds that place.
-
-
 
 =head3 ->key_object( String $key ) : Any $object
 
@@ -396,14 +356,10 @@ Given a string key, returns the object stored there.
 This is probably very unhelpful to you unless you explicitly
 asked us for our internal key name.
 
-
-
 =head3 ->key_object_at( Int $index ) : Any $object
 
 As with key_object, except partially useful, because you can fetch
 by ID.
-
-
 
 =head2 METHODS FROM PLUGINS
 
@@ -421,7 +377,7 @@ By default, this package imports a few methods from various plug-ins.
 
 =item ->indices
 
-=back 
+=back
 
 =item * L<Data::Couplet::Plugin::BasicReorder>
 
@@ -433,23 +389,20 @@ By default, this package imports a few methods from various plug-ins.
 
 =item ->swap
 
-=back 
+=back
 
-=back 
-
-
+=back
 
 =head1 AUTHOR
 
-  Kent Fredric <kentnl at cpan.org>
+Kent Fredric <kentnl at cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Kent Fredric.
+This software is copyright (c) 2011 by Kent Fredric.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

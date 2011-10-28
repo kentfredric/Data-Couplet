@@ -2,8 +2,12 @@ use strict;
 use warnings;
 
 package Data::Couplet::Plugin::KeyCount;
-our $VERSION = '0.02004312';
-
+BEGIN {
+  $Data::Couplet::Plugin::KeyCount::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Data::Couplet::Plugin::KeyCount::VERSION = '0.02004313';
+}
 
 # ABSTRACT: Provides various methods for seeing how many things are in the object
 
@@ -39,7 +43,6 @@ no Moose::Role;
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -48,37 +51,30 @@ Data::Couplet::Plugin::KeyCount - Provides various methods for seeing how many t
 
 =head1 VERSION
 
-version 0.02004312
+version 0.02004313
 
 =head3 ->count() : Int
 
 Number of items contained
 
-
-
 =head3 ->last_index() : Int
 
 Returns the last index value
-
-
 
 =head3 ->indices() : Array[Int]
 
 Returns 0 .. ->last_index
 
-
-
 =head1 AUTHOR
 
-  Kent Fredric <kentnl at cpan.org>
+Kent Fredric <kentnl at cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Kent Fredric.
+This software is copyright (c) 2011 by Kent Fredric.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

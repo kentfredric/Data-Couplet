@@ -2,8 +2,12 @@ use strict;
 use warnings;
 
 package Data::Couplet::Private;
-our $VERSION = '0.02004312';
-
+BEGIN {
+  $Data::Couplet::Private::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Data::Couplet::Private::VERSION = '0.02004313';
+}
 
 # ABSTRACT: Private internal bits for Data::Couplet
 
@@ -137,7 +141,6 @@ __PACKAGE__->meta->make_immutable;
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -146,7 +149,7 @@ Data::Couplet::Private - Private internal bits for Data::Couplet
 
 =head1 VERSION
 
-version 0.02004312
+version 0.02004313
 
 =head1 SYNOPSIS
 
@@ -169,12 +172,10 @@ Ensures end users don't get weighed down and tempted by stuff they don't need.
 Separates logically the interface from the implementation, allowing for more
 disperse changes without worry about breaking things.
 
-=back 
+=back
 
 The above structure could also be reverted back to something more sane, but you
 shouldn't mind, you don't rely on private methods anyway, do you? :)
-
-
 
 =head1 ATTRIBUTES
 
@@ -193,8 +194,6 @@ This is our internal way of mapping scalar representations of objects back to th
 NB: Because of how the conversion to scalar works at present, if an object is used for a key that
 has string overload, the overloaded value will be used in the index.
 
-
-
 =head2 _kv : rw HashRef
 
 Stores a mapping of Keys to Values
@@ -203,8 +202,6 @@ Stores a mapping of Keys to Values
 
 This is our primary data store, unordered, this is the part of the data that directly represents
 what you would get with a normal hash.
-
-
 
 =head2 _ki : rw HashRef
 
@@ -216,15 +213,11 @@ This is required if you need to know where in an array a key is without having
 to search the array for it. It also makes data set reordering
 much easier, increment values :)
 
-
-
 =head2 _ik : rw ArrayRef
 
 This keeps our keys in order
 
     [ KEY_SCALAR , KEY_SCALAR ]
-
-
 
 =head1 METHODS
 
@@ -234,19 +227,13 @@ This keeps our keys in order
  Essentially, stringify.
  This is done this way in case we need to change it later
 
-
-
 =head2 ->_unset_at ( Int $index ) : $self : Modifier
 
  Deletes things that are found using an index only.
 
-
-
 =head2 ->_unset_key ( String $key ) : $self : Modifier
 
  Deletes things that are found using a key only
-
-
 
 =head2 ->_move_key_range( Int $left , Int $right , Int $jump ) : $self : Modifier
 
@@ -255,53 +242,40 @@ This keeps our keys in order
  ->_move_key_range( $start, $stop , -1 ); # move left
  ->_move_key_range( $start, $stop , +1 ); # move right
 
-
-
 =head2 ->_index_key ( String $key ) : Int : Modifier
 
 Given a key, asserts it is in the data set, either by finding it
 or by creating it. Returns where the key is.
-
-
 
 =head2 ->_set ( Any $object , Any $value ) : $self : Modifier
 
 Insertion is easy. Everything that inserts the easy way
 can call this.
 
-
-
 =head2 ->_set_kiov ( String $key , Int $index, Any $object , Any $value ) : $self : Modifier
 
 Handles the part of assigning all the Key => Value association needed in many parts.
-
-
 
 =head2 ->_sync_ki : $self : Modifier
 
 Assume _ki is dead, and _ik is in charge, rebuild
 _ki from _ik
 
-
-
 =head2 ->_sync_ik : $self : Modifier
 
 Assume _ik is dead, and _ki is in charge,
 rebuild _ik from _ki
 
-
-
 =head1 AUTHOR
 
-  Kent Fredric <kentnl at cpan.org>
+Kent Fredric <kentnl at cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Kent Fredric.
+This software is copyright (c) 2011 by Kent Fredric.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

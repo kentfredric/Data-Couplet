@@ -51,18 +51,16 @@ do_test {
 for 3;
 
 do_test {
-  $object = new_ok( Couplet, [
-    { hash => 'key' }, { hash => 'value' },
-    { hash => 'key2' }, { hash => 'value2' }
-  ] );
+  $object = new_ok( Couplet, [ { hash => 'key' }, { hash => 'value' }, { hash => 'key2' }, { hash => 'value2' } ] );
 }
 for 4;
 
 do_test {
   $clone = $object->clone;
-  ok(  defined( $clone ), "Cloning complex things works" );
+  ok( defined($clone), "Cloning complex things works" );
   trace($clone) if DEBUG;
-} for 5;
+}
+for 5;
 
 do_test {
   isnt( refaddr($object), refaddr($clone), "Clones are not the same object " );
@@ -70,14 +68,14 @@ do_test {
 }
 for 6;
 
-
 do_test {
   my ( $x, $y );
   $x = $object->key_at(0);
   $y = $clone->key_at(0);
-  is( $x , $y , "Clone keys are the same" );
-  trace( [ $x , $y ] ) if DEBUG;
-} for 7;
+  is( $x, $y, "Clone keys are the same" );
+  trace( [ $x, $y ] ) if DEBUG;
+}
+for 7;
 
 do_test {
   my ( $x, $y );
@@ -85,7 +83,8 @@ do_test {
   $y = $clone->key_object_at(0);
   isnt( refaddr $x , refaddr $y , "Clone key objects are cloned" );
   trace( [ refaddr $x , refaddr $y ] ) if DEBUG;
-} for 8;
+}
+for 8;
 
 do_test {
   my ( $x, $y );
@@ -93,12 +92,8 @@ do_test {
   $y = $clone->value_at(0);
   isnt( refaddr $x , refaddr $y , "Clone key values are cloned" );
   trace( [ refaddr $x , refaddr $y ] ) if DEBUG;
-} for 9;
-
-
-
-
-
+}
+for 9;
 
 done_testing($t);
 

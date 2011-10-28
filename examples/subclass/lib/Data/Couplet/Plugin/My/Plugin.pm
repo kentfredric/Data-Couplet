@@ -1,6 +1,4 @@
 package Data::Couplet::Plugin::My::Plugin;
-our $VERSION = '0.02004312';
-
 
 # $Id:$
 use Moose::Role;

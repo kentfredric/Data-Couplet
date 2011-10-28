@@ -3,7 +3,20 @@ NAME
     mechanism
 
 VERSION
-    version 0.02004312
+    version 0.02004313
+
+SYNOPSIS
+      use Data::Couplet;
+
+      # Retain order.
+      my $couplet = Data::Couplet->new(   a => $b , c => $d );
+
+      my $output = $couplet->value('a');  # returns $b;
+
+      my $hash = { 'this is a' => 'key' };
+
+      $couplet->set( $hash, "hello");
+      $couplet->value( $hash ); # hello
 
 ALPHA CODE
     Lots of stuff is probably still broken, unimplemented, untested.
@@ -33,19 +46,6 @@ DIFFERENT
     I was using Tie::IxHash wasn't even sustainable on different versions of
     Perl, and based on the 1997 release date, I gave up on seeing that
     fixed.
-
-SYNOPSIS
-      use Data::Couplet;
-
-      # Retain order.
-      my $couplet = Data::Couplet->new(   a => $b , c => $d );
-
-      my $output = $couplet->value('a');  # returns $b;
-
-      my $hash = { 'this is a' => 'key' };
-
-      $couplet->set( $hash, "hello");
-      $couplet->value( $hash ); # hello
 
 METHODS
   CONSTRUCTOR
@@ -160,10 +160,10 @@ METHODS
         ->swap
 
 AUTHOR
-      Kent Fredric <kentnl at cpan.org>
+    Kent Fredric <kentnl at cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2009 by Kent Fredric.
+    This software is copyright (c) 2011 by Kent Fredric.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

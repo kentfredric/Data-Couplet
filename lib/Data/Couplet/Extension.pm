@@ -2,8 +2,12 @@ use strict;
 use warnings FATAL => 'all';
 
 package Data::Couplet::Extension;
-our $VERSION = '0.02004312';
-
+BEGIN {
+  $Data::Couplet::Extension::AUTHORITY = 'cpan:KENTNL';
+}
+{
+  $Data::Couplet::Extension::VERSION = '0.02004313';
+}
 
 # ABSTRACT: A convenient way for sub classing Data::Couplet with minimal effort
 
@@ -103,7 +107,6 @@ sub unimport {
 
 
 __END__
-
 =pod
 
 =head1 NAME
@@ -112,7 +115,7 @@ Data::Couplet::Extension - A convenient way for sub classing Data::Couplet with 
 
 =head1 VERSION
 
-version 0.02004312
+version 0.02004313
 
 =head1 SYNOPSIS
 
@@ -127,8 +130,6 @@ The alternative ways, while working, are likely largely suboptimal ( applying ro
 
 This gives you an easy way to create a sub class of L<Data::Couplet>, and possibly tack on some of your own
 methods directly.
-
-
 
 =head1 METHODS
 
@@ -177,27 +178,22 @@ You can't set this, we overwrite it. It gets  populated from C<-with> by simple 
 
 These are fed to Moose's C<with> method on your package
 
-
-
 =head2 unimport
 
 Seeing the only things we import come from Moose anyway, this is just
 
   goto \&Moose::unimport;
 
-
-
 =head1 AUTHOR
 
-  Kent Fredric <kentnl at cpan.org>
+Kent Fredric <kentnl at cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Kent Fredric.
+This software is copyright (c) 2011 by Kent Fredric.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 

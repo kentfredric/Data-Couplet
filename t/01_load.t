@@ -7,8 +7,7 @@ use Test::Moose;
 
 my $t = 0;
 
-++$t;
-use ok 'Data::Couplet';
+require Data::Couplet;
 
 ++$t;
 meta_ok('Data::Couplet');
