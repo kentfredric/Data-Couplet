@@ -6,7 +6,7 @@ BEGIN {
   $Data::Couplet::Plugin::KeyCount::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Data::Couplet::Plugin::KeyCount::VERSION = '0.02004313';
+  $Data::Couplet::Plugin::KeyCount::VERSION = '0.02004314';
 }
 
 # ABSTRACT: Provides various methods for seeing how many things are in the object
@@ -51,7 +51,7 @@ Data::Couplet::Plugin::KeyCount - Provides various methods for seeing how many t
 
 =head1 VERSION
 
-version 0.02004313
+version 0.02004314
 
 =head3 ->count() : Int
 

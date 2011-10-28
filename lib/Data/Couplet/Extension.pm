@@ -6,7 +6,7 @@ BEGIN {
   $Data::Couplet::Extension::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Data::Couplet::Extension::VERSION = '0.02004313';
+  $Data::Couplet::Extension::VERSION = '0.02004314';
 }
 
 # ABSTRACT: A convenient way for sub classing Data::Couplet with minimal effort
@@ -115,7 +115,7 @@ Data::Couplet::Extension - A convenient way for sub classing Data::Couplet with 
 
 =head1 VERSION
 
-version 0.02004313
+version 0.02004314
 
 =head1 SYNOPSIS
 

@@ -6,7 +6,7 @@ BEGIN {
   $Data::Couplet::Plugin::BasicReorder::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Data::Couplet::Plugin::BasicReorder::VERSION = '0.02004313';
+  $Data::Couplet::Plugin::BasicReorder::VERSION = '0.02004314';
 }
 
 # ABSTRACT: A D::C Plug-in to reorder data in your data set.
@@ -50,7 +50,7 @@ Data::Couplet::Plugin::BasicReorder - A D::C Plug-in to reorder data in your dat
 
 =head1 VERSION
 
-version 0.02004313
+version 0.02004314
 
 =head1 SYNOPSIS
 

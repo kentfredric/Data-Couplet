@@ -23,7 +23,7 @@ my %module_build_args = (
     "Kent Fredric <kentnl at cpan.org>"
   ],
   "dist_name" => "Data-Couplet",
-  "dist_version" => "0.02004313",
+  "dist_version" => "0.02004314",
   "license" => "perl",
   "module_name" => "Data::Couplet",
   "recommends" => {},
@@ -31,10 +31,9 @@ my %module_build_args = (
   "requires" => {
     "Carp" => 0,
     "Data::Dumper" => 0,
-    "Moose" => "0.84",
+    "Moose" => "0.90",
     "Moose::Role" => 0,
     "MooseX::Clone" => "0.04",
-    "MooseX::Has::Sugar" => "0.0404",
     "MooseX::Types" => "0.19",
     "MooseX::Types::Moose" => "0.19",
     "namespace::autoclean" => 0,

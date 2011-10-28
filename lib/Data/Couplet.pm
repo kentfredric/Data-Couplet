@@ -6,7 +6,7 @@ BEGIN {
   $Data::Couplet::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Data::Couplet::VERSION = '0.02004313';
+  $Data::Couplet::VERSION = '0.02004314';
 }
 
 # ABSTRACT: Yet another (But Hopefully Better) Key-Value Storage mechanism
@@ -198,7 +198,7 @@ Data::Couplet - Yet another (But Hopefully Better) Key-Value Storage mechanism
 
 =head1 VERSION
 
-version 0.02004313
+version 0.02004314
 
 =head1 SYNOPSIS
 

@@ -3,7 +3,7 @@ NAME
     mechanism
 
 VERSION
-    version 0.02004313
+    version 0.02004314
 
 SYNOPSIS
       use Data::Couplet;

@@ -16,6 +16,7 @@ lib/Data/Couplet/Plugin/BasicReorder.pm
 lib/Data/Couplet/Plugin/KeyCount.pm
 lib/Data/Couplet/Private.pm
 lib/Data/Couplet/Role/Plugin.pm
+lib/Data/Couplet/Types.pm
 perlcritic.rc
 t/00-compile.t
 t/000-report-versions-tiny.t

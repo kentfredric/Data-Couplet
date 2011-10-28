@@ -6,7 +6,7 @@ BEGIN {
   $Data::Couplet::Role::Plugin::AUTHORITY = 'cpan:KENTNL';
 }
 {
-  $Data::Couplet::Role::Plugin::VERSION = '0.02004313';
+  $Data::Couplet::Role::Plugin::VERSION = '0.02004314';
 }
 
 # ABSTRACT: A Generalised Role for classes to extend Data::Couplet via aggregation.
@@ -29,7 +29,7 @@ Data::Couplet::Role::Plugin - A Generalised Role for classes to extend Data::Cou
 
 =head1 VERSION
 
-version 0.02004313
+version 0.02004314
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,18 @@
 Revision history for Data-Couplet
 
+0.02004314 2011-10-28T14:54:15Z
+ [Dependencies]
+ - changed: runtime requires Moose 0.84 -> 0.90
+ - dropped: runtime requires MooseX::Has::Sugar
+
+ [Features]
+ - Added (private) accessors for everything moose can do on the ::Private
+   core. This is soley to discourage consumers from accesing the hash
+   internals directly to provide better encapsulation. Maybe one day
+   ::Private will be entirely replaced with XS and you want it to remain
+   working.
+ - Added a basic Type Library, Data::Couplet::Types
+
 0.02004313 2011-10-28T14:24:40Z
  - Maintenance release, no non-packaging changes in this release.
 
