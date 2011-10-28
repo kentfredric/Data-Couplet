@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.02004314 2011-10-28T14:54:15Z
  [Dependencies]
  - changed: runtime requires Moose 0.84 -> 0.90
  - dropped: runtime requires MooseX::Has::Sugar
