@@ -34,37 +34,36 @@ for ( 0 .. 40 ) {
   push @data, $key, $value;
 }
 
-my @i = sort { rand(50) <=> rand(50) } 0..40;
+my @i = sort { rand(50) <=> rand(50) } 0 .. 40;
 my @j = grep { rand(50) > 25 } @i;
 my $k = -1;
 my %m;
-@m{ @j } = ();
+@m{@j} = ();
 
-my @l = grep { $k++; !exists $m{$k} } map { $data[$_*2] } 0..40;
-
+my @l = grep { $k++; !exists $m{$k} } map { $data[ $_ * 2 ] } 0 .. 40;
 
 my $object;
 do_test {
-  $object = Couplet->new( @data );
-  isa_ok($object, Couplet );
+  $object = Couplet->new(@data);
+  isa_ok( $object, Couplet );
 };
 
 do_test {
-  $object->unset_at( @i );
-  is_deeply( [$object->keys()], [], 'Data now empty' ) || diag explain [ $object ];
+  $object->unset_at(@i);
+  is_deeply( [ $object->keys() ], [], 'Data now empty' ) || diag explain [$object];
 };
 
 do_test {
-  $object = Couplet->new( @data );
-  isa_ok($object, Couplet );
+  $object = Couplet->new(@data);
+  isa_ok( $object, Couplet );
 };
 
 do_test {
-  $object->unset_at( @j );
-  is_deeply( [$object->keys()], [@l], 'Random Degradation is still solid') || diag explain [ $object,\@l ];
+  $object->unset_at(@j);
+  is_deeply( [ $object->keys() ], [@l], 'Random Degradation is still solid' ) || diag explain [ $object, \@l ];
 };
 
+done_testing($t);
 
-done_testing( $t );
 #dump \@i;
 

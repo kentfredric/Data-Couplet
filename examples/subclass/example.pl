@@ -11,5 +11,3 @@ my $dc = My::DataCouplet->new(qw( foo bar ));
 
 print $dc->useless_routine;
 
-
-
